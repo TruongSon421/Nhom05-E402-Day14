@@ -17,10 +17,10 @@ import sys
 from pathlib import Path
 from typing import Dict, List
 
-# Đưa agent/app vào sys.path để import production modules (app.*)
-_APP_DIR = Path(__file__).resolve().parent / "app"
-if str(_APP_DIR) not in sys.path:
-    sys.path.insert(0, str(_APP_DIR))
+# Đưa agent/ vào sys.path để có thể import `app.*` (app nằm trong agent/)
+_AGENT_DIR = Path(__file__).resolve().parent
+if str(_AGENT_DIR) not in sys.path:
+    sys.path.insert(0, str(_AGENT_DIR))
 
 from langchain_core.messages import HumanMessage          # noqa: E402
 from app.agents.hr_graph import build_multi_agent_graph   # noqa: E402

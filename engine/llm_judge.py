@@ -63,25 +63,34 @@ class LLMJudge:
     async def _call_gemini(self, system_prompt: str, user_prompt: str):
         full_prompt = f"{system_prompt}\n\n{user_prompt}"
         loop = asyncio.get_event_loop()
-        resp = await loop.run_in_executor(
-            None,
-            lambda: genai_client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=full_prompt,
-                config=genai.types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0,
+        for attempt in range(3):
+            try:
+                resp = await loop.run_in_executor(
+                    None,
+                    lambda: genai_client.models.generate_content(
+                        model=GEMINI_MODEL,
+                        contents=full_prompt,
+                        config=genai.types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            temperature=0,
+                        )
+                    )
                 )
-            )
-        )
-        data = json.loads(resp.text)
-        tokens = resp.usage_metadata.total_token_count
-        return data, tokens
+                data = json.loads(resp.text)
+                tokens = resp.usage_metadata.total_token_count
+                return data, tokens
+            except Exception as e:
+                if attempt < 2:
+                    await asyncio.sleep(5 * (attempt + 1))
+                else:
+                    # Gemini không khả dụng — trả về None để fallback về GPT
+                    return None, 0
 
     async def evaluate_multi_judge(self, question: str, answer: str, ground_truth: str) -> Dict[str, Any]:
         """
         Gọi 2 model (GPT-4o-mini và Gemini Flash) song song.
         Tính Agreement Rate. Nếu lệch >= 2 điểm → tie-break lấy điểm thấp hơn.
+        Nếu Gemini lỗi → fallback chỉ dùng GPT.
         """
         system_prompt = f"Bạn là một AI Evaluator chuyên nghiệp. Hãy chấm điểm câu trả lời theo rubric sau:\n{RUBRIC}"
         user_prompt = (
@@ -95,8 +104,14 @@ class LLMJudge:
             self._call_gemini(system_prompt, user_prompt)
         )
 
-        score_gpt    = result_gpt.get("overall", 3)
-        score_gemini = result_gemini.get("overall", 3)
+        score_gpt = result_gpt.get("overall", 3)
+
+        # Fallback: Gemini không trả về kết quả → dùng GPT score cho cả hai
+        if result_gemini is None:
+            score_gemini = score_gpt
+            tokens_gemini = 0
+        else:
+            score_gemini = result_gemini.get("overall", 3)
         gap = abs(score_gpt - score_gemini)
 
         # Consensus logic
@@ -121,7 +136,7 @@ class LLMJudge:
             "conflict": gap >= 2,
             "reasons": {
                 "gpt-4o-mini": result_gpt.get("reason", ""),
-                "gemini-2.5-flash": result_gemini.get("reason", "")
+                "gemini-2.5-flash": result_gemini.get("reason", "") if result_gemini else "unavailable"
             },
             "token_usage": {
                 "gpt_tokens": tokens_gpt,
