@@ -60,31 +60,45 @@ Cùng một rubric được dùng cho cả 2 model để đảm bảo so sánh c
 
 ## 2. Kết quả đạt được
 
-> *(Điền sau khi chạy `python main.py` với toàn bộ 50 cases)*
+> *(Benchmark chạy 60 cases, ngày 21/04/2026, tổng thời gian 132.6s — 2211ms/case avg)*
 
 | Chỉ số | Kết quả |
 |---|---|
-| Agreement Rate trung bình | — |
-| Cohen's Kappa | — |
-| Số cases xung đột (gap ≥ 2) | — / 50 |
-| Tổng chi phí Judge (50 cases) | $— |
-| Chi phí trung bình / case | $— |
-| Position Bias detected | — |
+| Agreement Rate trung bình | 1.000 (100% — cả V1 lẫn V2) |
+| Cohen's Kappa | ≈ 1.0 (perfect agreement) |
+| Số cases xung đột (gap ≥ 2) | 0 / 60 |
+| Tổng chi phí Judge (60 cases) | không capture trong run này (token_usage không lưu vào file) |
+| Chi phí trung bình / case | — |
+| Position Bias detected | Không chạy trong benchmark chính |
+
+**Kết quả so sánh V1 vs V2:**
+
+| Version | Score | Hit Rate | Judge Agreement |
+|---|---|---|---|
+| V1 (baseline) | 4.35 / 5 | 0.750 | 1.000 |
+| V2 (optimized) | 4.27 / 5 | 0.750 | 1.000 |
+| Quyết định | **BLOCK RELEASE** — V2 giảm 0.08 điểm so với V1 |
 
 ---
 
 ## 3. Phân tích kết quả
 
-> *(Điền sau khi có kết quả benchmark)*
-
 ### 3.1 Khi nào 2 Judge bất đồng nhiều nhất?
-- Loại câu hỏi hay xảy ra xung đột: —
-- Tiêu chí hay bị lệch nhất: —
-- GPT-4o-mini thường chấm cao hơn / thấp hơn Gemini 2.5 Flash ở tiêu chí: —
+- **Không có trường hợp bất đồng nào** trong toàn bộ 60 cases — agreement_rate = 1.000 trên tất cả cases.
+- Nguyên nhân thực tế: `gemini-2.5-flash-lite` (judge thứ nhất trong run này) trả về `"reasoning": "unavailable"` ở tất cả 60 cases, đây là dấu hiệu **fallback logic đã được kích hoạt** — score của lite bị gán bằng score của `gemini-2.5-flash`, nên agreement luôn = 1.0.
+- Hệ quả: Agreement Rate 1.000 trong run này **không phản ánh sự đồng thuận độc lập** giữa 2 judge, mà là artifact của fallback. Cần chạy lại với GPT-4o-mini hoạt động ổn định để có kết quả có giá trị thống kê.
+- Tiêu chí hay bị lệch nhất (dự báo dựa trên thiết kế rubric): **accuracy** và **faithfulness** — đây là 2 tiêu chí đòi hỏi đối chiếu với ground truth, dễ có cách diễn giải khác nhau giữa các model.
 
 ### 3.2 Ý nghĩa của Cohen's Kappa đạt được
-- Kappa = — → đồng thuận ở mức —
-- Rubric 5 tiêu chí [đủ rõ ràng / cần làm rõ thêm ở ...]
+- Kappa ≈ 1.0 → đồng thuận ở mức **"Perfect"** theo thang đo — nhưng như phân tích ở 3.1, con số này bị inflate do fallback mechanism, không phải do 2 judge thực sự độc lập cùng cho điểm giống nhau.
+- Rubric 5 tiêu chí **đủ rõ ràng** cho Gemini 2.5 Flash (judge hoạt động): reasoning trả về đều mạch lạc, đúng trọng tâm từng tiêu chí.
+- Cải thiện cần thiết: đảm bảo judge thứ nhất (GPT-4o-mini hoặc Gemini Flash Lite) hoạt động ổn định để Kappa thực sự đo lường inter-rater reliability.
+
+### 3.3 Tại sao quyết định BLOCK?
+- V2 Score (4.27) < V1 Score (4.35) → regression −0.08 điểm
+- Hit Rate không cải thiện: cả 2 đều đạt 0.75 (45/60 cases pass retrieval)
+- Pipeline V2 được gọi là "OPTIMIZED" nhưng chưa vượt được baseline V1 → BLOCK là đúng theo ngưỡng an toàn
+- 15/60 cases có `hit_rate = 0.0` cho thấy retrieval vẫn là điểm yếu chính cần cải thiện ở V3
 
 ---
 
