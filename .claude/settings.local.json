@@ -4,7 +4,9 @@
       "Bash(rtk ls *)",
       "Bash(python -c ' *)",
       "Bash(python data/synthetic_gen.py)",
-      "Bash(.venv/Scripts/python data/synthetic_gen.py)"
+      "Bash(.venv/Scripts/python data/synthetic_gen.py)",
+      "Bash(python *)",
+      "Bash(.venv/Scripts/python -c ' *)"
     ]
   }
 }
