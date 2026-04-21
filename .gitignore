@@ -28,5 +28,8 @@ Thumbs.db
 
 # --- Lab Data & Reports (Per requirements) ---
 data/golden_set.jsonl
+
 reports/
 .ai-log/
+.claude
+
