@@ -10,3 +10,4 @@ data/golden_set.jsonl
 # frontend
 node_modules/
 agent/frontend/node_modules/
+venv

@@ -1,9 +1,29 @@
-pypdf>=4.0.0
-ragas>=0.1.7
+# ========== Backend (FastAPI + AI Agent) ==========
+fastapi
+uvicorn[standard]
+pydantic
+pyjwt
+sqlalchemy
+pymysql
+passlib[bcrypt]
+redis
+psutil
+langgraph
+nemoguardrails
+langchain-openai
+langfuse>=2.0.0
+
+# ========== AI/ML Libraries ==========
 openai>=1.10.0
-python-dotenv>=1.0.0
+chromadb>=0.5.0
+ragas>=0.1.7
+google-genai>=1.0.0
+
+# ========== Data Processing ==========
+pypdf>=4.0.0
 pandas>=2.1.0
 tqdm>=4.66.0
+
+# ========== Utilities ==========
 jinja2>=3.1.0
-chromadb>=0.5.0
-google-genai>=1.0.0
+python-dotenv>=1.0.0
