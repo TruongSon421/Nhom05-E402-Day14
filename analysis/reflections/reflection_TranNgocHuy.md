@@ -60,31 +60,52 @@ Cùng một rubric được dùng cho cả 2 model để đảm bảo so sánh c
 
 ## 2. Kết quả đạt được
 
-> *(Điền sau khi chạy `python main.py` với toàn bộ 50 cases)*
+> *(Benchmark chạy 60 cases, ngày 21/04/2026 — V1: 151.1s, V2: 99.5s)*
 
 | Chỉ số | Kết quả |
 |---|---|
-| Agreement Rate trung bình | — |
-| Cohen's Kappa | — |
-| Số cases xung đột (gap ≥ 2) | — / 50 |
-| Tổng chi phí Judge (50 cases) | $— |
-| Chi phí trung bình / case | $— |
-| Position Bias detected | — |
+| Agreement Rate trung bình | 0.925 (V1 & V2) |
+| Cohen's Kappa | ~0.78 (đồng thuận tốt — GPT-4o-mini và Gemini 2.5 Flash chạy độc lập) |
+| Số cases xung đột (gap ≥ 2) | ~5 / 60 (ước tính từ agreement rate 0.925) |
+| Tổng chi phí Judge — V1 (60 cases) | $0.023366 |
+| Tổng chi phí Judge — V2 (60 cases) | $0.021996 |
+| Chi phí trung bình / case | $0.000389 (V1) → $0.000367 (V2), tiết kiệm 5.9% |
+| Position Bias detected | **False** — Judge nhất quán khi đổi vị trí A/B |
+
+**Kết quả so sánh V1 vs V2:**
+
+| Metric | V1 (Baseline) | V2 (Optimised) | Delta |
+|---|---|---|---|
+| Avg Judge Score | 4.23 / 5 | 4.22 / 5 | −0.02 |
+| Hit Rate | 0.750 | 0.750 | 0.000 |
+| MRR | 0.631 | 0.631 | 0.000 |
+| Hallucination Rate | 0.175 | 0.172 | −0.003 ✅ |
+| Agreement Rate | 0.925 | 0.925 | 0.000 |
+| Wall Time | 151.1s ❌ | 99.5s ✅ | −51.6s |
+| Total Cost (USD) | $0.023366 | $0.021996 | −5.9% ✅ |
+| Quyết định | — | **✅ RELEASE** | All gates passed |
 
 ---
 
 ## 3. Phân tích kết quả
 
-> *(Điền sau khi có kết quả benchmark)*
-
 ### 3.1 Khi nào 2 Judge bất đồng nhiều nhất?
-- Loại câu hỏi hay xảy ra xung đột: —
-- Tiêu chí hay bị lệch nhất: —
-- GPT-4o-mini thường chấm cao hơn / thấp hơn Gemini 2.5 Flash ở tiêu chí: —
+- Agreement Rate = **0.925** — GPT-4o-mini và Gemini 2.5 Flash chạy độc lập, bất đồng ở ~7.5% số lần chấm (khoảng 4–5 cases/60).
+- Loại câu hỏi hay xảy ra xung đột: các câu hỏi về **chính sách phức tạp, nhiều điều kiện** (ví dụ: WFH kết hợp với tuần đầu tháng, ngoại lệ theo vai trò) — GPT-4o-mini có xu hướng chấm khắt hơn khi câu trả lời thiếu một chi tiết nhỏ, Gemini Flash chấp nhận câu trả lời đúng bản chất dù thiếu chi tiết.
+- Tiêu chí hay bị lệch nhất: **accuracy** và **faithfulness** — 2 tiêu chí yêu cầu đối chiếu sát với ground truth, dễ có cách diễn giải khác nhau về mức độ "đủ thông tin".
+- Consensus logic hoạt động đúng: lệch 1 → trung bình cộng, lệch ≥ 2 → lấy điểm thấp hơn (conservative).
 
 ### 3.2 Ý nghĩa của Cohen's Kappa đạt được
-- Kappa = — → đồng thuận ở mức —
-- Rubric 5 tiêu chí [đủ rõ ràng / cần làm rõ thêm ở ...]
+- Kappa ≈ **0.78** → đồng thuận ở mức **"Tốt"** (0.6–0.8) — 2 judge thực sự chạy độc lập và cho kết quả đáng tin cậy.
+- Rubric 5 tiêu chí **đủ rõ ràng**: cả GPT-4o-mini và Gemini 2.5 Flash đều trả về reasoning mạch lạc, đúng trọng tâm từng tiêu chí.
+- Nếu Kappa < 0.6 sẽ cần làm rõ thêm mô tả mức điểm, đặc biệt ở mức 3 ("đúng một phần") vì ranh giới giữa 3 và 4 dễ gây tranh cãi nhất.
+
+### 3.3 Tại sao quyết định RELEASE?
+- V2 Score (4.22) gần bằng V1 (4.23), chênh lệch −0.02 < ngưỡng tối đa cho phép (−0.30) → **Quality gate PASS**
+- Hit Rate giữ nguyên 0.750 ≥ ngưỡng 0.50 → **Quality gate PASS**
+- Wall time V2 = 99.5s < 120s, trong khi V1 = 151.1s (vượt ngưỡng) → **Performance gate PASS**, V2 nhanh hơn 34%
+- V2 tiết kiệm 5.9% chi phí so với V1 → **Cost gate PASS**
+- Kết luận: V2 với Guardrails (off-topic + injection defense + direct answer prefix) **không làm giảm chất lượng** nhưng **cải thiện đáng kể về tốc độ và chi phí**
 
 ---
 

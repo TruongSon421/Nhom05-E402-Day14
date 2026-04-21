@@ -1,6 +1,5 @@
 # 📑 Hướng dẫn Triển khai Hợp nhất (Strictly Source-Accurate) - Lab Day 14
 
-Tài liệu này được tổng hợp 100% nguyên văn từ các tài liệu chuẩn của Lab 14. Không có chi tiết tự suy luận.
 
 ---
 
@@ -20,7 +19,7 @@ Tài liệu này được tổng hợp 100% nguyên văn từ các tài liệu c
 | Người phụ trách | Vai trò | File chính | **Expert Level (Bonus Tasks)** |
 | :--- | :--- | :--- | :--- |
 | **Bùi Lâm Tiến** | P1: Data Lead | `synthetic_gen.py` | Tạo 50+ cases kèm Ground Truth IDs. Thiết kế **Red Teaming** phá vỡ hệ thống thành công và các **Hard Cases** (Adversarial, Edge, Multi-turn). |
-| **Trần Trường Sơn** | P2: Retrieval Eng | `retrieval_eval.py` | Giải thích mối liên hệ giữa **Retrieval Quality** và **Answer Quality**. Chỉ ra chính xác chunk nào gây Hallucination. |
+| **Trần Thượng Trường Sơn** | P2: Retrieval Eng | `retrieval_eval.py` | Giải thích mối liên hệ giữa **Retrieval Quality** và **Answer Quality**. Chỉ ra chính xác chunk nào gây Hallucination. |
 | **Trần Ngọc Huy** | P3: AI Judge | `llm_judge.py` | Triển khai 2+ model Judge. Tính toán **Cohen's Kappa** (Hệ số đồng thuận). Kiểm tra lỗi **Position Bias**. |
 | **Nông Trung Kiên** | P4: Backend | `runner.py` | Chạy song song cực nhanh (< 2 phút cho 50 case). Báo cáo **Cost & Token usage**. Đề xuất giảm 30% chi phí eval. |
 | **Trường Đăng Nghĩa** | P5: DevOps | `main.py` | So sánh **V1 vs V2**. Logic **Auto-Gate Release/Rollback** dựa trên chỉ số Chất lượng/Chi phí/Hiệu năng. |
