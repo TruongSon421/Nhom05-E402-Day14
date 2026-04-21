@@ -6,7 +6,23 @@ reports/
 data/golden_set.jsonl
 
 .claude
+
+# ChromaDB local database
+.chromadb/
+
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Pytest cache
+.pytest_cache/
  
-# frontend
+# Frontend
 node_modules/
-agent/frontend/node_modules/

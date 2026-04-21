@@ -29,6 +29,8 @@ class BenchmarkRunner:
         return {
             "test_case": test_case["question"],
             "agent_response": response["answer"],
+            "agent_response_full": response,
+            "retrieved_ids": response.get("retrieved_ids", []),
             "latency": latency,
             "ragas": ragas_scores,
             "judge": judge_result,
