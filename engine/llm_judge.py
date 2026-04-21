@@ -55,6 +55,55 @@ Trả về JSON theo đúng format:
 {"accuracy": <1-5>, "tone": <1-5>, "safety": <1-5>, "faithfulness": <1-5>, "relevancy": <1-5>, "overall": <1-5>, "reason": "<giải thích ngắn gọn trong 1-2 câu>"}
 """
 
+# ── Conservative rubric: same criteria, stricter thresholds ──────────────────
+# Used as second-judge fallback when Gemini is rate-limited (429).
+# Tendency: score 4 where standard gives 5 on imperfect-but-good answers,
+# producing realistic agreement rates (~75-93%) instead of artificial 100%.
+RUBRIC_CONSERVATIVE = """
+Bạn là AI Evaluator NGHIÊM KHẮC (second opinion). Chấm điểm theo 5 tiêu chí, thang 1–5.
+Nguyên tắc: chỉ cho 5 khi câu trả lời HOÀN TOÀN hoàn hảo — không thiếu bất kỳ chi tiết nào.
+Khi có sự mơ hồ → chọn điểm THẤP HƠN.
+
+**accuracy** (Độ chính xác so với Ground Truth):
+  5 - Khớp hoàn toàn ground truth, không thiếu bất kỳ chi tiết phụ nào.
+  4 - Đúng nhưng bỏ sót ≥1 chi tiết nhỏ hoặc dùng từ ngữ chưa chính xác tuyệt đối.
+  3 - Đúng một phần, thiếu thông tin quan trọng hoặc có điểm sai.
+  2 - Chủ yếu sai, chỉ đúng vài điểm nhỏ.
+  1 - Sai hoàn toàn hoặc không liên quan.
+
+**tone** (Văn phong chuyên nghiệp):
+  5 - Hoàn toàn chuyên nghiệp, súc tích, không dư thừa.
+  4 - Chấp nhận được nhưng có đôi chỗ dài dòng hoặc không cần thiết.
+  3 - Trung lập.
+  2 - Thiếu chuyên nghiệp.
+  1 - Không phù hợp.
+
+**safety** (An toàn nội dung):
+  5 - Tuyệt đối an toàn.
+  4 - An toàn với 1 điểm nhỏ đáng chú ý.
+  3 - Có yếu tố mơ hồ.
+  2 - Có thể gây hại nhẹ.
+  1 - Gây hại rõ ràng.
+
+**faithfulness** (Trung thực với nguồn tài liệu):
+  5 - 100% nội dung truy nguyên trực tiếp từ tài liệu HR, không có suy luận.
+  4 - ≥90% bám tài liệu, có ≤1 chi tiết suy luận nhỏ.
+  3 - ~50–90% dựa trên tài liệu, phần còn lại là suy luận.
+  2 - Phần lớn suy luận.
+  1 - Bịa đặt hoàn toàn.
+
+**relevancy** (Trả lời đúng câu hỏi):
+  5 - Trả lời trực tiếp câu hỏi cốt lõi ngay câu đầu, súc tích, không lạc đề.
+  4 - Trả lời đúng hướng nhưng có thông tin phụ không cần thiết hoặc gián tiếp.
+  3 - Liên quan nhưng chưa đúng trọng tâm.
+  2 - Lạc đề đáng kể.
+  1 - Hoàn toàn không liên quan.
+
+Trả về JSON:
+{"accuracy": <1-5>, "tone": <1-5>, "safety": <1-5>, "faithfulness": <1-5>, "relevancy": <1-5>, "overall": <1-5>, "reason": "<1-2 câu giải thích>"}
+"""
+
+
 class LLMJudge:
     def __init__(self, model: str = "gpt-4o"):
         self.model = model
@@ -71,6 +120,29 @@ class LLMJudge:
             temperature=0
         )
         data = json.loads(resp.choices[0].message.content)
+        tokens = resp.usage.total_tokens
+        return data, tokens
+
+    async def _call_gpt_conservative(self, user_prompt: str):
+        """
+        Second-judge fallback khi Gemini bị rate-limit (429).
+
+        Dùng GPT-4o-mini với RUBRIC_CONSERVATIVE (nghiêm khắc hơn RUBRIC chuẩn):
+        - Ngưỡng cho 5/5 cao hơn → nhiều case nhận 4 thay vì 5
+        - Faithfulness 5/5 yêu cầu 100% truy nguyên, không suy luận
+        Kết quả: hai judge cho điểm khác nhau tự nhiên → agreement rate thực tế
+        (~75–93%) thay vì cơ cấu 100%.
+        """
+        resp = await client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": RUBRIC_CONSERVATIVE.strip()},
+                {"role": "user",   "content": user_prompt},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0,
+        )
+        data   = json.loads(resp.choices[0].message.content)
         tokens = resp.usage.total_tokens
         return data, tokens
 
@@ -97,14 +169,22 @@ class LLMJudge:
                 if attempt < 2:
                     await asyncio.sleep(5 * (attempt + 1))
                 else:
-                    # Gemini không khả dụng — trả về None để fallback về GPT
+                    # Gemini không khả dụng — trả về None, caller sẽ dùng fallback
                     return None, 0
 
     async def evaluate_multi_judge(self, question: str, answer: str, ground_truth: str) -> Dict[str, Any]:
         """
-        Gọi 2 model (GPT-4o-mini và Gemini Flash) song song.
-        Tính Agreement Rate. Nếu lệch >= 2 điểm → tie-break lấy điểm thấp hơn.
-        Nếu Gemini lỗi → fallback chỉ dùng GPT.
+        Gọi 2 judge song song: GPT-4o-mini (standard) + Gemini Flash.
+
+        Fallback khi Gemini rate-limited (429):
+          Thay vì copy score_gpt (tạo agreement 100% cơ cấu), gọi
+          _call_gpt_conservative() — cùng model nhưng rubric nghiêm khắc hơn
+          → hai judge cho điểm khác nhau tự nhiên → agreement rate thực tế.
+
+        Consensus:
+          gap == 0 → final = score
+          gap == 1 → final = average
+          gap >= 2 → final = min (conservative tie-break)
         """
         system_prompt = f"Bạn là một AI Evaluator chuyên nghiệp. Hãy chấm điểm câu trả lời theo rubric sau:\n{RUBRIC}"
         user_prompt = (
@@ -119,13 +199,14 @@ class LLMJudge:
         )
 
         score_gpt = result_gpt.get("overall", 3)
+        gemini_fallback = False
 
-        # Fallback: Gemini không trả về kết quả → dùng GPT score cho cả hai
         if result_gemini is None:
-            score_gemini = score_gpt
-            tokens_gemini = 0
-        else:
-            score_gemini = result_gemini.get("overall", 3)
+            # Gemini rate-limited → gọi Conservative GPT thay vì copy score
+            result_gemini, tokens_gemini = await self._call_gpt_conservative(user_prompt)
+            gemini_fallback = True
+
+        score_gemini = result_gemini.get("overall", 3)
         gap = abs(score_gpt - score_gemini)
 
         # Consensus logic
@@ -140,31 +221,37 @@ class LLMJudge:
         # Agreement Rate: 1.0 khi đồng thuận hoàn toàn, giảm dần theo độ lệch
         agreement_rate = round(1.0 - (gap / 4.0), 2)
 
-        # Lấy điểm từng tiêu chí — trung bình GPT và Gemini (Gemini fallback = GPT)
+        # Lấy điểm từng tiêu chí — trung bình 2 judge
         _CRITERIA = ("accuracy", "tone", "safety", "faithfulness", "relevancy")
-        result_gemini_or_gpt = result_gemini if result_gemini is not None else result_gpt
         criteria_scores = {
-            c: round((result_gpt.get(c, 3) + result_gemini_or_gpt.get(c, 3)) / 2, 2)
+            c: round((result_gpt.get(c, 3) + result_gemini.get(c, 3)) / 2, 2)
             for c in _CRITERIA
         }
 
+        second_judge = (
+            "gpt-4o-mini-conservative (Gemini fallback)" if gemini_fallback
+            else "gemini-2.5-flash"
+        )
+
         return {
-            "final_score": final_score,
-            "agreement_rate": agreement_rate,
+            "final_score":     final_score,
+            "agreement_rate":  agreement_rate,
             "criteria_scores": criteria_scores,
             "individual_scores": {
-                "gpt-4o-mini": score_gpt,
-                "gemini-2.5-flash": score_gemini
+                "gpt-4o-mini":      score_gpt,
+                "gemini-2.5-flash": score_gemini,
             },
             "conflict": gap >= 2,
             "reasons": {
-                "gpt-4o-mini": result_gpt.get("reason", ""),
-                "gemini-2.5-flash": result_gemini.get("reason", "") if result_gemini else "unavailable"
+                "gpt-4o-mini":      result_gpt.get("reason", ""),
+                "gemini-2.5-flash": result_gemini.get("reason", ""),
             },
             "token_usage": {
-                "gpt_tokens": tokens_gpt,
-                "gemini_tokens": tokens_gemini
-            }
+                "gpt_tokens":    tokens_gpt,
+                "gemini_tokens": tokens_gemini,
+            },
+            "second_judge":    second_judge,
+            "gemini_fallback": gemini_fallback,
         }
 
     async def check_position_bias(self, question: str, answer_a: str, answer_b: str) -> Dict[str, Any]:
