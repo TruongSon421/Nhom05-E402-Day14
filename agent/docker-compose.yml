@@ -1,0 +1,78 @@
+services:
+
+  # ── Backend agent ──────────────────────────────────────────────────────────
+  agent:
+    build:
+      context: ..                   # build context = Nhom05-E402-Day14/ (chứa cả agent/ và data/)
+      dockerfile: agent/Dockerfile
+    environment:
+      - ENVIRONMENT=production
+      - APP_NAME=HR AI Agent
+      - DATA_DIR=/app/data
+      - CHROMA_PERSIST_DIR=/app/.chromadb
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=mysql+pymysql://agent_user:agent_pass@mysql:3306/agent_db
+    env_file:
+      - .env                        # OPENAI_API_KEY, JWT_SECRET, v.v.
+    volumes:
+      - chroma_data:/app/.chromadb  # ChromaDB persist — giữ lại khi restart
+    depends_on:
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+  # ── Frontend (nginx + React build) ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"                     # truy cập UI tại http://localhost
+    depends_on:
+      agent:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Redis (session history + rate limiter) ────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  # ── MySQL (user accounts) ─────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.4
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=agent_db
+      - MYSQL_USER=agent_user
+      - MYSQL_PASSWORD=agent_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uagent_user -pagent_pass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  chroma_data:   # ChromaDB vector store
+  redis_data:    # Redis persistence
+  mysql_data:    # MySQL data
