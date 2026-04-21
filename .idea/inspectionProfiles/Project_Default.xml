@@ -1,0 +1,26 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="google-generativeai" />
+          <option value="requests" />
+          <option value="pytest" />
+          <option value="llama-cpp-python" />
+          <option value="langgraph" />
+          <option value="fastapi" />
+          <option value="langchain-openai" />
+          <option value="uvicorn" />
+          <option value="python-multipart" />
+          <option value="langgraph-checkpoint-sqlite" />
+          <option value="aiosqlite" />
+          <option value="langchain-google-genai" />
+          <option value="tavily-python" />
+          <option value="langchain-chroma" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
