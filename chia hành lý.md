@@ -1,11 +1,4 @@
-Bùi Thế Công - 2A202600008
-Bùi Lâm Tiến - 2A202600004
-Trần Trường Sơn - 2A202600313
-Trần Ngọc Huy - 2A202600298
-Trường Đăng Nghĩa - 2A202600407
-Nông Trung Kiên - 2A202600414
- 
-  👤 Người 1 — Data Lead: Golden Dataset & SDG (Bùi Lâm Tiến)
+Người 1 — Data Lead: Golden Dataset & SDG
 
   File chính: data/synthetic_gen.py
 
@@ -15,7 +8,8 @@ Nông Trung Kiên - 2A202600414
 - Chạy python data/synthetic_gen.py và verify output
 
   ---
-  👤 Người 2 — Retrieval Engineer: Hit Rate & MRR (Trần Trường Sơn)
+
+Người 2 — Retrieval Engineer: Hit Rate & MRR
 
   File chính: data/retrieval_eval.py
 
@@ -25,7 +19,8 @@ Nông Trung Kiên - 2A202600414
 - Viết report liên hệ Retrieval Quality → Answer Quality
 
   ---
-  👤 Người 3 — AI Judge: Multi-Model Consensus (Trần Ngọc Huy)
+
+Người 3 — AI Judge: Multi-Model Consensus
 
   File chính: engine/llm_judge.py
 
@@ -35,7 +30,8 @@ Nông Trung Kiên - 2A202600414
 - Tránh Position Bias khi judge
 
   ---
-  👤 Người 4 — Backend: Async Runner & Performance (Nông Trung Kiên)
+
+Người 4 — Backend: Async Runner & Performance
 
   File chính: engine/runner.py
 
@@ -45,7 +41,8 @@ Nông Trung Kiên - 2A202600414
 - Báo cáo giá tiền mỗi lần eval
 
   ---
-  👤 Người 5 — DevOps: Regression Gate & main.py (Trường Đăng Nghĩa)
+
+Người 5 — DevOps: Regression Gate & main.py
 
   File chính: main.py
 
@@ -55,7 +52,8 @@ Nông Trung Kiên - 2A202600414
 - Chạy python check_lab.py trước khi nộp
 
   ---
-  👤 Người 6 — Analyst: Failure Analysis & Tích hợp (Bùi Thế Công)
+
+Người 6 — Analyst: Failure Analysis & Tích hợp
 
   File chính: analysis/failure_analysis.md
 
