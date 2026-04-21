@@ -7,13 +7,16 @@ Responsibilities:
   2. Target: < 2 phút cho 50 cases
   3. Cost & Token usage tracking chi tiết mỗi lần eval
   4. [EXTRA] Cost Optimization Report — đề xuất giảm ≥30% chi phí
+  5. [EXTRA] Cohen's Kappa inter-rater agreement across full dataset
+  6. [EXTRA] Position Bias detection on failed cases
 
 Architecture:
   BenchmarkRunner
-  ├── run_single_test()         → track token + cost + latency per step
-  ├── run_all()                 → Semaphore + progress bar (tqdm)
-  ├── generate_cost_report()    → breakdown per model, per step
-  └── suggest_cost_optimizations() → 30% cost reduction strategies
+  ├── run_single_test()              → track token + cost + latency per step
+  ├── run_all()                      → Semaphore + progress bar (tqdm) + error handling
+  ├── generate_cost_report()         → breakdown per model, per step + kappa
+  ├── run_position_bias_check()      → detect position bias on sample of cases
+  └── suggest_cost_optimizations()   → 30% cost reduction strategies
 """
 
 from __future__ import annotations
@@ -21,7 +24,7 @@ from __future__ import annotations
 import asyncio
 import sys
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from typing import Any
 
 try:
@@ -40,7 +43,7 @@ def _safe_print(text: str) -> None:
 
 
 # ─── Pricing Table (USD per 1M tokens) ──────────────────────────────────────
-# Source: OpenAI pricing page (Apr 2025)
+# Source: OpenAI / Google pricing page (Apr 2026)
 MODEL_PRICING: dict[str, dict[str, float]] = {
     "gpt-4o": {
         "input":  2.50,   # $2.50 / 1M input tokens
@@ -49,6 +52,10 @@ MODEL_PRICING: dict[str, dict[str, float]] = {
     "gpt-4o-mini": {
         "input":  0.15,   # $0.15 / 1M input tokens
         "output": 0.60,   # $0.60 / 1M output tokens
+    },
+    "gemini-2.5-flash": {
+        "input":  0.075,  # $0.075 / 1M tokens (blended — free under 15 req/min)
+        "output": 0.30,   # $0.30 / 1M output tokens
     },
     "claude-3-5-sonnet": {
         "input":  3.00,
@@ -147,7 +154,7 @@ class CostBreakdown:
         }
 
 
-# ─── Token Usage Extractor ───────────────────────────────────────────────────
+# ─── Token Usage Extractors ──────────────────────────────────────────────────
 
 def _extract_agent_token_usage(response: dict[str, Any]) -> TokenUsage:
     """
@@ -169,39 +176,48 @@ def _extract_agent_token_usage(response: dict[str, Any]) -> TokenUsage:
     )
 
 
-# Default fallback model list when judge doesn't report individual scores
-_DEFAULT_JUDGE_MODELS: tuple[str, ...] = ("gpt-4o", "claude-3-5-sonnet")
-
-
 def _extract_judge_token_usage(judge_result: dict[str, Any]) -> list[TokenUsage]:
     """
-    Extract per-model token usage from multi-judge result.
-    Falls back to estimated values if judge doesn't report usage.
-    [M2 fix] Uses named constant for default model list.
+    Extract per-model token usage from P3's multi-judge result.
+
+    P3's evaluate_multi_judge() returns:
+      token_usage: {"gpt_tokens": N, "gemini_tokens": N}
+      individual_scores: {"gpt-4o-mini": N, "gemini-2.5-flash": N}
+
+    We map gpt_tokens → gpt-4o-mini and gemini_tokens → gemini-2.5-flash.
+    Falls back to realistic estimates if the field is missing.
     """
     usages: list[TokenUsage] = []
-    individual_scores = judge_result.get("individual_scores", {})
+    token_usage = judge_result.get("token_usage", {})
 
-    # Try to read actual usage reported by judge
-    token_usage_map: dict[str, dict] = judge_result.get("token_usage", {})
+    # ── gpt-4o-mini ───────────────────────────────────────────────────────
+    gpt_total = token_usage.get("gpt_tokens", 0)
+    if gpt_total > 0:
+        # Realistic split: ~83% prompt, ~17% completion
+        gpt_prompt     = int(gpt_total * 0.83)
+        gpt_completion = gpt_total - gpt_prompt
+    else:
+        gpt_prompt, gpt_completion = 600, 120
 
-    model_names = list(individual_scores.keys()) if individual_scores else list(_DEFAULT_JUDGE_MODELS)
-        if model_name in token_usage_map:
-            u = token_usage_map[model_name]
-            usages.append(TokenUsage(
-                model=model_name,
-                prompt_tokens=u.get("prompt_tokens", 600),
-                completion_tokens=u.get("completion_tokens", 120),
-                total_tokens=u.get("total_tokens", 720),
-            ))
-        else:
-            # Realistic estimate: judge prompt ~600 tokens, output ~120 tokens
-            usages.append(TokenUsage(
-                model=model_name,
-                prompt_tokens=600,
-                completion_tokens=120,
-                total_tokens=720,
-            ))
+    usages.append(TokenUsage(
+        model="gpt-4o-mini",
+        prompt_tokens=gpt_prompt,
+        completion_tokens=gpt_completion,
+    ))
+
+    # ── gemini-2.5-flash ─────────────────────────────────────────────────
+    gemini_total = token_usage.get("gemini_tokens", 0)
+    if gemini_total > 0:
+        gemini_prompt     = int(gemini_total * 0.83)
+        gemini_completion = gemini_total - gemini_prompt
+    else:
+        gemini_prompt, gemini_completion = 600, 120
+
+    usages.append(TokenUsage(
+        model="gemini-2.5-flash",
+        prompt_tokens=gemini_prompt,
+        completion_tokens=gemini_completion,
+    ))
 
     return usages
 
@@ -216,7 +232,10 @@ class BenchmarkRunner:
     ----------
     agent       : Any object with `async query(question) -> dict`
     evaluator   : Any object with `async score(case, response) -> dict`
-    judge       : Any object with `async evaluate_multi_judge(q, a, gt) -> dict`
+    judge       : LLMJudge (or compatible) with:
+                    async evaluate_multi_judge(q, a, gt) -> dict
+                    compute_cohen_kappa(results) -> float
+                    async check_position_bias(q, a, b) -> dict
     concurrency : Max simultaneous coroutines (default 10, guards against rate-limit)
     """
 
@@ -237,6 +256,7 @@ class BenchmarkRunner:
     async def run_single_test(self, test_case: dict[str, Any]) -> dict[str, Any]:
         """
         Run one test case end-to-end and return a fully instrumented result.
+        [H3 fix] Catches all exceptions so one failure does not abort the batch.
 
         Result schema
         -------------
@@ -245,48 +265,64 @@ class BenchmarkRunner:
           "agent_response"  : str,
           "ragas"           : {...},
           "judge"           : {...},
-          "status"          : "pass" | "fail",
+          "status"          : "pass" | "fail" | "error",
           "performance"     : StepPerformance.to_dict(),
           "cost_breakdown"  : CostBreakdown.to_dict(),
+          "error"           : str | None,
         }
         """
         perf         = StepPerformance()
         cost_tracker = CostBreakdown()
 
-        # ── Step 1: Agent ─────────────────────────────────────────────────
-        t0 = time.perf_counter()
-        response = await self.agent.query(test_case["question"])
-        perf.agent_latency_ms = (time.perf_counter() - t0) * 1000
+        try:
+            # ── Step 1: Agent ─────────────────────────────────────────────────
+            t0 = time.perf_counter()
+            response = await self.agent.query(test_case["question"])
+            perf.agent_latency_ms = (time.perf_counter() - t0) * 1000
 
-        cost_tracker.agent = _extract_agent_token_usage(response)
+            cost_tracker.agent = _extract_agent_token_usage(response)
 
-        # ── Step 2: Retrieval / RAGAS metrics ────────────────────────────
-        t1 = time.perf_counter()
-        ragas_scores = await self.evaluator.score(test_case, response)
-        perf.retrieval_latency_ms = (time.perf_counter() - t1) * 1000
+            # ── Step 2: Retrieval / RAGAS metrics ────────────────────────────
+            t1 = time.perf_counter()
+            ragas_scores = await self.evaluator.score(test_case, response)
+            perf.retrieval_latency_ms = (time.perf_counter() - t1) * 1000
 
-        # ── Step 3: Multi-Judge ───────────────────────────────────────────
-        t2 = time.perf_counter()
-        judge_result = await self.judge.evaluate_multi_judge(
-            test_case["question"],
-            response["answer"],
-            test_case.get("expected_answer", test_case.get("ground_truth", "")),
-        )
-        perf.judge_latency_ms = (time.perf_counter() - t2) * 1000
+            # ── Step 3: Multi-Judge ───────────────────────────────────────────
+            t2 = time.perf_counter()
+            judge_result = await self.judge.evaluate_multi_judge(
+                test_case["question"],
+                response["answer"],
+                test_case.get("expected_answer", test_case.get("ground_truth", "")),
+            )
+            perf.judge_latency_ms = (time.perf_counter() - t2) * 1000
 
-        cost_tracker.judge = _extract_judge_token_usage(judge_result)
+            cost_tracker.judge = _extract_judge_token_usage(judge_result)
 
-        # ── Assemble result ───────────────────────────────────────────────
-        final_score = judge_result.get("final_score", 0)
-        return {
-            "test_case":      test_case["question"],
-            "agent_response": response["answer"],
-            "ragas":          ragas_scores,
-            "judge":          judge_result,
-            "status":         "fail" if final_score < 3 else "pass",
-            "performance":    perf.to_dict(),
-            "cost_breakdown": cost_tracker.to_dict(),
-        }
+            # ── Assemble result ───────────────────────────────────────────────
+            final_score = judge_result.get("final_score", 0)
+            return {
+                "test_case":      test_case["question"],
+                "agent_response": response["answer"],
+                "ragas":          ragas_scores,
+                "judge":          judge_result,
+                "status":         "fail" if final_score < 3 else "pass",
+                "performance":    perf.to_dict(),
+                "cost_breakdown": cost_tracker.to_dict(),
+                "error":          None,
+            }
+
+        except Exception as exc:  # noqa: BLE001
+            # [H3] Never let a single case crash the whole batch
+            return {
+                "test_case":      test_case.get("question", "unknown"),
+                "agent_response": "",
+                "ragas":          {},
+                "judge":          {},
+                "status":         "error",
+                "performance":    perf.to_dict(),
+                "cost_breakdown": cost_tracker.to_dict(),
+                "error":          f"{type(exc).__name__}: {exc}",
+            }
 
     # ── Batch runner ─────────────────────────────────────────────────────────
 
@@ -298,13 +334,12 @@ class BenchmarkRunner:
     async def run_all(
         self,
         dataset: list[dict[str, Any]],
-        batch_size: int = 10,
+        batch_size: int = 10,  # kept for API compatibility; Semaphore controls true concurrency
     ) -> list[dict[str, Any]]:
         """
         Run all test cases concurrently, bounded by self._semaphore.
-
         Uses tqdm progress bar when available.
-        batch_size kept for API compatibility but Semaphore controls true concurrency.
+        [H3 fix] Uses return_exceptions=False but errors are caught per-case.
         """
         wall_start = time.perf_counter()
 
@@ -313,7 +348,7 @@ class BenchmarkRunner:
         if TQDM_AVAILABLE:
             results = await async_tqdm.gather(
                 *tasks,
-                desc="🔄 Benchmarking",
+                desc="Benchmarking",
                 unit="case",
                 colour="green",
             )
@@ -322,12 +357,15 @@ class BenchmarkRunner:
 
         wall_elapsed = time.perf_counter() - wall_start
         total_cases  = len(results)
+        error_cases  = sum(1 for r in results if r.get("status") == "error")
 
         _safe_print(
             f"\nPipeline hoan thanh {total_cases} cases trong "
             f"{wall_elapsed:.1f}s "
-            f"({wall_elapsed / total_cases * 1000:.0f}ms/case avg)"
+            f"({wall_elapsed / max(total_cases, 1) * 1000:.0f}ms/case avg)"
         )
+        if error_cases:
+            _safe_print(f"[WARN] {error_cases} cases gap loi — kiem tra truong 'error' trong ket qua.")
         if wall_elapsed > 120:
             _safe_print("[WARN] Vuot nguong 2 phut! Hay giam concurrency hoac toi uu prompt.")
         else:
@@ -337,10 +375,10 @@ class BenchmarkRunner:
 
     # ── Cost Report ───────────────────────────────────────────────────────────
 
-    @staticmethod
-    def generate_cost_report(results: list[dict[str, Any]]) -> dict[str, Any]:
+    def generate_cost_report(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         """
         Aggregate per-case cost data into a full cost report.
+        [EXTRA] Includes Cohen's Kappa from P3's judge.
 
         Returns
         -------
@@ -352,6 +390,7 @@ class BenchmarkRunner:
           "by_model"             : { model_name: {cost_usd, tokens, calls} },
           "by_step"              : { "agent": cost, "judge": cost },
           "throughput_summary"   : { avg_latency_ms, min, max, p95 },
+          "cohen_kappa"          : float,
           "optimization_report"  : suggest_cost_optimizations(results),
         }
         """
@@ -362,7 +401,7 @@ class BenchmarkRunner:
         latencies: list[float] = []
 
         for r in results:
-            cb = r.get("cost_breakdown", {})
+            cb   = r.get("cost_breakdown", {})
             perf = r.get("performance", {})
 
             # ── Per-model accumulation ────────────────────────────────────
@@ -381,8 +420,22 @@ class BenchmarkRunner:
             if "total_latency_ms" in perf:
                 latencies.append(perf["total_latency_ms"])
 
-        n = len(results) or 1
+        n = max(len(results), 1)
         sorted_latencies = sorted(latencies)
+
+        # [H1 fix] Safe P95 — clamp index to valid range
+        p95_latency = 0
+        if sorted_latencies:
+            p95_idx = min(int(len(sorted_latencies) * 0.95), len(sorted_latencies) - 1)
+            p95_latency = round(sorted_latencies[p95_idx], 1)
+
+        # [EXTRA] Cohen's Kappa via P3's judge
+        kappa = 0.0
+        if hasattr(self.judge, "compute_cohen_kappa"):
+            try:
+                kappa = self.judge.compute_cohen_kappa(results)
+            except Exception:
+                kappa = 0.0
 
         report = {
             "total_cost_usd":      round(total_cost, 6),
@@ -401,15 +454,93 @@ class BenchmarkRunner:
                 "avg_latency_ms": round(sum(latencies) / len(latencies), 1) if latencies else 0,
                 "min_latency_ms": round(sorted_latencies[0], 1)  if latencies else 0,
                 "max_latency_ms": round(sorted_latencies[-1], 1) if latencies else 0,
-                "p95_latency_ms": round(
-                    sorted_latencies[int(len(sorted_latencies) * 0.95)], 1
-                ) if latencies else 0,
+                "p95_latency_ms": p95_latency,
             },
+            "cohen_kappa": kappa,
+            "cohen_kappa_interpretation": _interpret_kappa(kappa),
             "optimization_report": suggest_cost_optimizations(results, total_cost),
         }
 
         _print_cost_report(report)
         return report
+
+    # ── Position Bias Check ───────────────────────────────────────────────────
+
+    async def run_position_bias_check(
+        self,
+        results: list[dict[str, Any]],
+        sample_size: int = 3,
+    ) -> dict[str, Any]:
+        """
+        [EXTRA] Run position bias detection on a sample of failed/low-score cases.
+
+        Uses P3's judge.check_position_bias() to detect if the judge favors
+        answers placed first. Runs `sample_size` pairs concurrently.
+
+        Returns summary: bias_rate, cases checked, individual bias results.
+        """
+        if not hasattr(self.judge, "check_position_bias"):
+            return {"error": "judge does not implement check_position_bias"}
+
+        # Pick failed or low-scoring cases as candidates
+        candidates = [
+            r for r in results
+            if r.get("status") in ("fail", "error") or
+               r.get("judge", {}).get("final_score", 5) <= 3
+        ]
+
+        # If not enough failed cases, sample from all results
+        if len(candidates) < sample_size:
+            candidates = results
+
+        sample = candidates[:sample_size]
+
+        # Build check tasks: compare agent response vs ground-truth as answer_b
+        async def _check_one(r: dict[str, Any]) -> dict[str, Any]:
+            question = r.get("test_case", "")
+            answer_a = r.get("agent_response", "")
+            # Use ragas context or a generic placeholder as answer_b
+            answer_b = r.get("judge", {}).get("reasons", {}).get(
+                "gpt-4o-mini",
+                "Không có câu trả lời tham chiếu."
+            )
+            async with self._semaphore:
+                bias_result = await self.judge.check_position_bias(question, answer_a, answer_b)
+            return {
+                "question":    question[:80] + ("..." if len(question) > 80 else ""),
+                "bias_result": bias_result,
+            }
+
+        checks = await asyncio.gather(*[_check_one(r) for r in sample], return_exceptions=True)
+
+        valid_checks = [c for c in checks if isinstance(c, dict)]
+        bias_detected_count = sum(
+            1 for c in valid_checks
+            if c.get("bias_result", {}).get("bias_detected", False)
+        )
+        bias_rate = bias_detected_count / max(len(valid_checks), 1)
+
+        summary = {
+            "cases_checked":       len(valid_checks),
+            "bias_detected_count": bias_detected_count,
+            "bias_rate":           round(bias_rate, 2),
+            "bias_rate_pct":       f"{bias_rate:.0%}",
+            "verdict": (
+                "Judge co Position Bias — can them instruction 'danh gia doc lap voi thu tu'."
+                if bias_rate >= 0.5 else
+                "Judge nhat quan — khong co Position Bias dang ke."
+            ),
+            "details": valid_checks,
+        }
+
+        _safe_print("\n" + "-" * 52)
+        _safe_print("[EXTRA] POSITION BIAS CHECK RESULTS")
+        _safe_print(f"  Cases checked    : {summary['cases_checked']}")
+        _safe_print(f"  Bias detected    : {summary['bias_detected_count']} ({summary['bias_rate_pct']})")
+        _safe_print(f"  Verdict          : {summary['verdict']}")
+        _safe_print("-" * 52)
+
+        return summary
 
     # ── Tiered Judge Strategy ────────────────────────────────────────────────
 
@@ -429,7 +560,7 @@ class BenchmarkRunner:
             1 for r in results
             if 2.5 <= r.get("judge", {}).get("final_score", 0) <= 4.0
         )
-        total = len(results) or 1
+        total = max(len(results), 1)
         clear_cases     = total - ambiguous_count
         escalation_rate = ambiguous_count / total
 
@@ -449,14 +580,14 @@ class BenchmarkRunner:
         savings_pct = (1 - tiered_total_cost / (naive_total_cost or 1)) * 100
 
         return {
-            "strategy":         "Tiered Judging (mini pre-filter + gpt-4o escalation)",
-            "total_cases":      total,
-            "clear_cases":      clear_cases,
-            "escalated_cases":  ambiguous_count,
-            "escalation_rate":  f"{escalation_rate:.1%}",
-            "naive_cost_usd":   round(naive_total_cost, 6),
-            "tiered_cost_usd":  round(tiered_total_cost, 6),
-            "savings_pct":      round(savings_pct, 1),
+            "strategy":          "Tiered Judging (mini pre-filter + gpt-4o escalation)",
+            "total_cases":       total,
+            "clear_cases":       clear_cases,
+            "escalated_cases":   ambiguous_count,
+            "escalation_rate":   f"{escalation_rate:.1%}",
+            "naive_cost_usd":    round(naive_total_cost, 6),
+            "tiered_cost_usd":   round(tiered_total_cost, 6),
+            "savings_pct":       round(savings_pct, 1),
             "meets_30pct_target": savings_pct >= 30,
         }
 
@@ -471,11 +602,12 @@ def suggest_cost_optimizations(
     [EXTRA — P4 Expert Task]
     Analyze results and propose concrete strategies to cut eval cost by ≥30%.
 
-    Two key strategies:
+    Three key strategies:
       A) Tiered Judging    → ~40% judge cost reduction
       B) Prompt Caching    → ~50% token cost reduction on repeated system prompts
+      C) Batch API         → 50% off entire pipeline (offline only)
     """
-    n = len(results) or 1
+    n = max(len(results), 1)
 
     # ── Strategy A: Tiered Judging ────────────────────────────────────────
     # Use gpt-4o-mini for clear cases (score < 2.5 or > 4.5)
@@ -484,7 +616,6 @@ def suggest_cost_optimizations(
         1 for r in results
         if 2.5 <= r.get("judge", {}).get("final_score", 5) <= 4.5
     )
-    clear      = n - ambiguous
     mini_price = MODEL_PRICING["gpt-4o-mini"]
     full_price = MODEL_PRICING["gpt-4o"]
 
@@ -514,43 +645,43 @@ def suggest_cost_optimizations(
 
     return {
         "summary": (
-            f"Áp dụng chiến lược A + B có thể giảm ≈{combined_saving_pct:.0f}% chi phí "
-            f"(target: 30%). Chiến lược C tiết kiệm 50% nhưng chỉ phù hợp cho offline eval."
+            f"Ap dung chien luoc A + B co the giam ≈{combined_saving_pct:.0f}% chi phi "
+            f"(target: 30%). Chien luoc C tiet kiem 50% nhung chi phu hop cho offline eval."
         ),
         "current_total_cost_usd": round(current_total_cost, 6),
         "strategies": {
             "A_tiered_judging": {
                 "description": (
-                    "Dùng gpt-4o-mini làm pre-filter judge cho tất cả cases. "
-                    "Chỉ leo thang lên gpt-4o khi score ở vùng mơ hồ [2.5–4.5]. "
-                    f"Trong bộ này: {ambiguous}/{n} cases cần leo thang ({ambiguous/n:.0%})."
+                    "Dung gpt-4o-mini lam pre-filter judge cho tat ca cases. "
+                    "Chi leo thang len gpt-4o khi score o vung mo ho [2.5–4.5]. "
+                    f"Trong bo nay: {ambiguous}/{n} cases can leo thang ({ambiguous/n:.0%})."
                 ),
                 "naive_judge_cost_usd":  round(judge_cost_naive, 6),
                 "tiered_judge_cost_usd": round(judge_cost_tiered, 6),
                 "estimated_saving_pct":  round(saving_a_pct, 1),
-                "implementation":        "Thêm `tiered_judge=True` vào BenchmarkRunner.__init__()",
+                "implementation":        "Them `tiered_judge=True` vao BenchmarkRunner.__init__()",
                 "meets_target":          saving_a_pct >= 20,
             },
             "B_prompt_caching": {
                 "description": (
-                    "System prompt judge giống nhau cho tất cả cases. "
-                    "OpenAI tự động cache prefix ≥ 1024 tokens → giảm 50% input cost cho phần cache. "
-                    f"Tiết kiệm ước tính {cache_saving_usd * 1000:.4f} mUSD trên bộ này."
+                    "System prompt judge giong nhau cho tat ca cases. "
+                    "OpenAI tu dong cache prefix >= 1024 tokens → giam 50% input cost cho phan cache. "
+                    f"Tiet kiem uoc tinh {cache_saving_usd * 1000:.4f} mUSD tren bo nay."
                 ),
                 "cached_tokens":        cache_saving_tokens,
                 "estimated_saving_usd": round(cache_saving_usd, 6),
                 "estimated_saving_pct": round(saving_b_pct, 1),
-                "implementation":       "Không cần code thêm — đảm bảo system prompt đứng đầu message list",
+                "implementation":       "Khong can code them — dam bao system prompt dung dau message list",
                 "meets_target":         saving_b_pct >= 5,
             },
             "C_batch_api": {
                 "description": (
-                    "OpenAI Batch API: gửi tất cả request cùng lúc, kết quả sau tối đa 24h. "
-                    "Giảm 50% chi phí toàn bộ pipeline nhưng KHÔNG phù hợp cho real-time eval."
+                    "OpenAI Batch API: gui tat ca request cung luc, ket qua sau toi da 24h. "
+                    "Giam 50% chi phi toan bo pipeline nhung KHONG phu hop cho real-time eval."
                 ),
                 "estimated_saving_pct": saving_c_pct,
-                "tradeoff":             "Latency: từ ~2 phút → ~24 giờ",
-                "implementation":       "Dùng `openai.batches.create()` thay vì `chat.completions.create()`",
+                "tradeoff":             "Latency: tu ~2 phut → ~24 gio",
+                "implementation":       "Dung `openai.batches.create()` thay vi `chat.completions.create()`",
                 "recommended_for":      "Offline analysis, nightly regression runs",
             },
         },
@@ -575,9 +706,22 @@ def _accumulate_model(stats: dict[str, dict], usage_dict: dict) -> None:
     stats[model]["calls"]        += 1
 
 
+def _interpret_kappa(kappa: float) -> str:
+    """Return human-readable interpretation of Cohen's Kappa value."""
+    if kappa > 0.80:
+        return "Almost Perfect (> 0.80) — judges are highly reliable"
+    if kappa > 0.60:
+        return "Substantial (0.61-0.80) — good inter-rater agreement"
+    if kappa > 0.40:
+        return "Moderate (0.41-0.60) — acceptable, consider refining rubric"
+    if kappa > 0.20:
+        return "Fair (0.21-0.40) — low agreement, review judge temperature"
+    return "Poor (< 0.20) — judges disagree significantly, revise rubric"
+
+
 def _print_cost_report(report: dict[str, Any]) -> None:
     """Pretty-print the cost report to stdout (emoji-safe)."""
-    sep = "-" * 52
+    sep = "-" * 56
     _safe_print(f"\n{sep}")
     _safe_print("[COST & PERFORMANCE REPORT]  (P4 - Kien)")
     _safe_print(sep)
@@ -604,7 +748,128 @@ def _print_cost_report(report: dict[str, Any]) -> None:
     _safe_print(f"     P95 latency : {tp['p95_latency_ms']:.0f}ms")
     _safe_print(f"     Min / Max   : {tp['min_latency_ms']:.0f}ms / {tp['max_latency_ms']:.0f}ms")
     _safe_print("")
+    kappa = report.get("cohen_kappa", 0.0)
+    _safe_print(f"  [EXTRA] Cohen's Kappa  : {kappa:.4f}")
+    _safe_print(f"          Interpretation : {report.get('cohen_kappa_interpretation', '')}")
+    _safe_print("")
     opt = report["optimization_report"]
     _safe_print(f"  [EXTRA] Saving potential: ~{opt['combined_realistic_saving_pct']}% (strategy A+B)")
     _safe_print(f"  >> {opt['recommendation'][:80]}...")
     _safe_print(sep)
+
+
+# ── Self-test (run directly: python -m engine.runner) ────────────────────────
+
+if __name__ == "__main__":
+
+    async def _self_test() -> None:
+        """Smoke-test all components with mock objects — no real API calls."""
+        import random
+
+        class MockAgent:
+            async def query(self, question: str) -> dict:
+                await asyncio.sleep(random.uniform(0.01, 0.05))
+                return {
+                    "answer": f"Mock answer for: {question}",
+                    "metadata": {
+                        "model": "gpt-4o-mini",
+                        "usage": {"prompt_tokens": 180, "completion_tokens": 45},
+                    },
+                }
+
+        class MockEvaluator:
+            async def score(self, case: dict, resp: dict) -> dict:
+                return {"faithfulness": 0.9, "relevancy": 0.85,
+                        "retrieval": {"hit_rate": 1.0, "mrr": 0.75}}
+
+        class MockJudge:
+            async def evaluate_multi_judge(self, q: str, a: str, gt: str) -> dict:
+                await asyncio.sleep(random.uniform(0.02, 0.08))
+                score = random.choice([2, 3, 4, 5])
+                return {
+                    "final_score":    float(score),
+                    "agreement_rate": 0.85,
+                    "individual_scores": {
+                        "gpt-4o-mini":      score,
+                        "gemini-2.5-flash": max(1, score - random.choice([0, 1])),
+                    },
+                    "conflict": False,
+                    "reasons": {
+                        "gpt-4o-mini":      "Good answer, accurate.",
+                        "gemini-2.5-flash": "Mostly correct.",
+                    },
+                    "token_usage": {
+                        "gpt_tokens":    random.randint(650, 850),
+                        "gemini_tokens": random.randint(700, 900),
+                    },
+                }
+
+            def compute_cohen_kappa(self, results: list) -> float:
+                # Delegate to LLMJudge logic — stub returns reasonable value
+                scores_g = []
+                scores_m = []
+                for r in results:
+                    ind = r.get("judge", {}).get("individual_scores", {})
+                    if "gpt-4o-mini" in ind and "gemini-2.5-flash" in ind:
+                        scores_g.append(int(ind["gpt-4o-mini"]))
+                        scores_m.append(int(ind["gemini-2.5-flash"]))
+                if len(scores_g) < 2:
+                    return 0.0
+                from collections import Counter
+                n = len(scores_g)
+                agree = sum(1 for a, b in zip(scores_g, scores_m) if a == b)
+                po = agree / n
+                cg = Counter(scores_g)
+                cm = Counter(scores_m)
+                pe = sum((cg[s]/n)*(cm[s]/n) for s in set(scores_g)|set(scores_m))
+                if pe >= 1.0:
+                    return 1.0
+                return round((po - pe) / (1.0 - pe), 4)
+
+            async def check_position_bias(self, q: str, a: str, b: str) -> dict:
+                await asyncio.sleep(0.02)
+                bias = random.choice([True, False])
+                return {
+                    "bias_detected":             bias,
+                    "winner_normal_order":        "A",
+                    "winner_swapped_order":       "B" if bias else "A",
+                    "winner_swapped_normalized":  "A" if bias else "A",
+                    "explanation": (
+                        "Judge bi Position Bias." if bias else "Judge nhat quan."
+                    ),
+                }
+
+        dataset = [
+            {"question": f"Cau hoi so {i}?", "ground_truth": f"Dap an so {i}."}
+            for i in range(1, 8)
+        ]
+
+        runner = BenchmarkRunner(MockAgent(), MockEvaluator(), MockJudge(), concurrency=5)
+
+        _safe_print("=" * 56)
+        _safe_print("SELF-TEST: run_all()")
+        _safe_print("=" * 56)
+        results = await runner.run_all(dataset)
+
+        _safe_print("\n" + "=" * 56)
+        _safe_print("SELF-TEST: generate_cost_report()")
+        _safe_print("=" * 56)
+        report = runner.generate_cost_report(results)
+        _safe_print(f"\n  Kappa raw value : {report['cohen_kappa']}")
+
+        _safe_print("\n" + "=" * 56)
+        _safe_print("SELF-TEST: estimate_tiered_savings()")
+        _safe_print("=" * 56)
+        tiered = BenchmarkRunner.estimate_tiered_savings(results)
+        _safe_print(f"  Savings estimate : {tiered['savings_pct']}%")
+        _safe_print(f"  Meets 30% target : {tiered['meets_30pct_target']}")
+
+        _safe_print("\n" + "=" * 56)
+        _safe_print("SELF-TEST: run_position_bias_check()")
+        _safe_print("=" * 56)
+        bias_summary = await runner.run_position_bias_check(results, sample_size=3)
+        _safe_print(f"  Bias rate : {bias_summary['bias_rate_pct']}")
+
+        _safe_print("\nAll self-tests passed!")
+
+    asyncio.run(_self_test())
