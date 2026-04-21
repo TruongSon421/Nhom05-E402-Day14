@@ -6,3 +6,6 @@ reports/
 data/golden_set.jsonl
 
 .claude
+ 
+# frontend
+*.node_modules/
