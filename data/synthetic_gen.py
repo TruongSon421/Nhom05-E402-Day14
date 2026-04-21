@@ -2,9 +2,11 @@
 Synthetic Data Generation (SDG) - Lab Day 14
 Output: data/golden_set.jsonl (55+ test cases)
 """
+import glob
 import json
 import os
 import random
+import re
 import sys
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -23,33 +25,115 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 MAX_WORKERS = 10  # số thread song song gọi API
 
 
+MD_DIR = "data/documents"  # thư mục chứa các file .md nguồn
+
+# Mapping tên file → doc_id tương ứng
+_MD_DOC_ID = {
+    "employee_handbook.md":       "EH-001",
+    "recruitment_onboarding.md":  "RO-002",
+    "faq.md":                     "FAQ-003",
+    "performance_evaluation.md":  "PE-004",
+}
+
+
+def _parse_tags(tag_line: str) -> List[str]:
+    """Tách danh sách tag từ dòng dạng 'Tags: #tag1 #tag2 ...'"""
+    return [t.lstrip("#").replace("_", " ") for t in re.findall(r"#\S+", tag_line)]
+
+
 def load_chunks() -> List[Dict]:
-    with open("data/documents/hr_rag_dataset.json", encoding="utf-8") as f:
-        data = json.load(f)
-    chunks = []
-    for doc in data["documents"]:
-        for section in doc.get("sections", []):
-            for sub in section.get("subsections", []):
-                chunks.append({
-                    "chunk_id": sub["subsection_id"],
-                    "title": sub["title"],
-                    "content": sub.get("content", sub.get("chunk_text", "")),
-                    "chunk_text": sub.get("chunk_text", ""),
-                    "doc_id": doc["doc_id"],
-                    "section_title": section["title"],
-                    "tags": sub.get("tags", []),
-                })
-            for faq in section.get("faqs", []):
-                chunks.append({
-                    "chunk_id": faq["faq_id"],
-                    "title": faq["question"],
-                    "content": faq["answer"],
-                    "chunk_text": faq["answer"],
-                    "doc_id": doc["doc_id"],
-                    "section_title": section["title"],
-                    "tags": faq.get("tags", []),
-                })
-    print(f"[INFO] Đã tải {len(chunks)} chunks từ dataset")
+    """
+    Đọc toàn bộ file .md trong MD_DIR, parse thành danh sách chunks.
+    Mỗi chunk tương ứng với 1 subsection (### ...) hoặc 1 FAQ (### ❓ ...).
+    Format chunk trả về tương thích với phần còn lại của pipeline.
+    """
+    md_files = sorted(glob.glob(os.path.join(MD_DIR, "*.md")))
+    if not md_files:
+        raise FileNotFoundError(f"Không tìm thấy file .md nào trong '{MD_DIR}'")
+
+    chunks: List[Dict] = []
+
+    for md_path in md_files:
+        fname = os.path.basename(md_path)
+        doc_id = _MD_DOC_ID.get(fname, fname.replace(".md", "").upper())
+
+        with open(md_path, encoding="utf-8") as f:
+            lines = f.readlines()
+
+        current_section = ""
+        current_chunk_id = ""
+        current_title = ""
+        current_tags: List[str] = []
+        current_is_faq = False
+        content_lines: List[str] = []
+
+        def flush_chunk():
+            """Lưu chunk đang buffer vào danh sách."""
+            nonlocal current_chunk_id, current_title, current_tags
+            nonlocal current_section, content_lines, current_is_faq
+            if not current_chunk_id:
+                return
+            body = "\n".join(content_lines).strip()
+            if not body:
+                return
+            chunks.append({
+                "chunk_id":     current_chunk_id,
+                "title":        current_title,
+                "content":      body,
+                "chunk_text":   body[:400],   # rút gọn cho context
+                "doc_id":       doc_id,
+                "section_title": current_section,
+                "tags":         current_tags,
+                "is_faq":       current_is_faq,
+            })
+
+        for raw in lines:
+            line = raw.rstrip("\n")
+
+            # --- Section (##) ---
+            if line.startswith("## ") and not line.startswith("### "):
+                flush_chunk()
+                current_chunk_id = ""
+                content_lines = []
+                current_section = line[3:].strip()
+                # Bỏ dòng *Section ID: ...* tiếp theo (xử lý ở vòng lặp kế)
+                continue
+
+            # --- Subsection / FAQ header (###) ---
+            if line.startswith("### "):
+                flush_chunk()
+                current_chunk_id = ""
+                content_lines = []
+                current_title = line[4:].strip().lstrip("❓").strip()
+                current_is_faq = "❓" in line
+                continue
+
+            # --- Dòng metadata: *ID: ... | Tags: ...* ---
+            id_match = re.match(r"\*(FAQ ID|ID):\s*([A-Za-z0-9_\-]+)", line)
+            if id_match:
+                current_chunk_id = id_match.group(2)
+                current_tags = _parse_tags(line)
+                continue
+
+            # --- Bỏ qua các dòng phân cách và header tài liệu ---
+            if line.startswith("---") or line.startswith("# ") or line.startswith("> "):
+                continue
+
+            # --- Dòng *Section ID: ...* ---
+            if re.match(r"\*Section ID:", line):
+                continue
+
+            # --- Nội dung thông thường ---
+            if current_chunk_id:
+                content_lines.append(line)
+
+        flush_chunk()  # chunk cuối của mỗi file
+
+    print(f"[INFO] Đã tải {len(chunks)} chunks từ {len(md_files)} file markdown")
+    for md_path in md_files:
+        fname = os.path.basename(md_path)
+        n = sum(1 for c in chunks if c["doc_id"] == _MD_DOC_ID.get(fname, ""))
+        print(f"   {fname}: {n} chunks")
     return chunks
 
 
