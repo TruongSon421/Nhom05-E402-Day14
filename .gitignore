@@ -37,3 +37,8 @@ reports/
 node_modules/
 agent/frontend/node_modules/
 
+<<<<<<< HEAD
+=======
+#venv
+venv/
+>>>>>>> 6856e15 (fix main)
