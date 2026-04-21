@@ -1,0 +1,1488 @@
+{
+  "metadata": {
+    "domain": "Human Resources (HR)",
+    "language": "vi",
+    "version": "2.0.0",
+    "created_at": "2025-01-01",
+    "description": "Bộ dữ liệu HR cho hệ thống RAG - bao gồm Cẩm nang nhân viên, Quy trình tuyển dụng & Onboarding, FAQ và Hệ thống Đánh giá Hiệu suất & Khen thưởng",
+    "total_documents": 4,
+    "embedding_model_suggestion": "text-embedding-3-large",
+    "chunk_strategy": "paragraph",
+    "chunk_size_tokens": 512,
+    "chunk_overlap_tokens": 64
+  },
+  "documents": [
+    {
+      "doc_id": "EH-001",
+      "title": "Cẩm nang nhân viên (Employee Handbook)",
+      "category": "employee_handbook",
+      "language": "vi",
+      "sections": [
+        {
+          "section_id": "EH-001-S01",
+          "title": "Chào mừng & Giới thiệu công ty",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S01-01",
+              "title": "Thư chào mừng từ Ban Giám đốc",
+              "content": "Chào mừng bạn đến với đại gia đình [Tên Công ty]! Chúng tôi rất vui mừng khi bạn trở thành một thành viên mới. Mỗi nhân viên là một tài sản quý giá, và sự góp mặt của bạn sẽ mang lại những giá trị to lớn cho tổ chức. Cẩm nang này được biên soạn nhằm cung cấp cho bạn những thông tin cần thiết về chính sách, quy định, quyền lợi và văn hóa công ty. Chúng tôi khuyến khích bạn đọc kỹ và lưu giữ tài liệu này để tham khảo khi cần.",
+              "tags": [
+                "chào mừng",
+                "giới thiệu",
+                "ban giám đốc"
+              ],
+              "chunk_text": "Chào mừng bạn đến với đại gia đình [Tên Công ty]. Mỗi nhân viên là một tài sản quý giá. Cẩm nang nhân viên cung cấp thông tin về chính sách, quy định, quyền lợi và văn hóa công ty."
+            },
+            {
+              "subsection_id": "EH-001-S01-02",
+              "title": "Tầm nhìn, Sứ mệnh và Giá trị cốt lõi",
+              "content": "Tầm nhìn: Trở thành công ty hàng đầu trong ngành, mang lại giá trị bền vững cho khách hàng, nhân viên và cộng đồng.\n\nSứ mệnh: Cung cấp sản phẩm/dịch vụ chất lượng cao, lấy con người làm trung tâm, không ngừng đổi mới sáng tạo để đáp ứng nhu cầu thị trường.\n\nGiá trị cốt lõi:\n1. Chính trực (Integrity): Hành động trung thực, minh bạch trong mọi tình huống.\n2. Đổi mới (Innovation): Khuyến khích tư duy sáng tạo, không ngại thay đổi.\n3. Hợp tác (Collaboration): Xây dựng văn hóa làm việc nhóm, hỗ trợ lẫn nhau.\n4. Trách nhiệm (Accountability): Mỗi cá nhân chịu trách nhiệm với công việc và kết quả của mình.\n5. Tôn trọng (Respect): Đối xử công bằng, tôn trọng sự đa dạng và khác biệt.",
+              "tags": [
+                "tầm nhìn",
+                "sứ mệnh",
+                "giá trị cốt lõi",
+                "văn hóa công ty"
+              ],
+              "chunk_text": "Tầm nhìn: Trở thành công ty hàng đầu trong ngành. Sứ mệnh: Cung cấp sản phẩm/dịch vụ chất lượng cao, lấy con người làm trung tâm. Giá trị cốt lõi gồm: Chính trực, Đổi mới, Hợp tác, Trách nhiệm và Tôn trọng."
+            },
+            {
+              "subsection_id": "EH-001-S01-03",
+              "title": "Lịch sử và cột mốc phát triển",
+              "content": "Công ty được thành lập năm [Năm thành lập] với số nhân sự ban đầu là [X] người. Qua nhiều năm phát triển, đến nay công ty đã có hơn [Y] nhân viên, với [Z] chi nhánh trên toàn quốc. Các cột mốc quan trọng bao gồm: mở rộng thị trường ra khu vực [Vùng], ra mắt sản phẩm [Tên sản phẩm], và được vinh danh là [Giải thưởng].",
+              "tags": [
+                "lịch sử",
+                "cột mốc",
+                "phát triển"
+              ],
+              "chunk_text": "Công ty thành lập năm [Năm]. Đến nay có hơn [Y] nhân viên và [Z] chi nhánh toàn quốc. Đã đạt được nhiều cột mốc phát triển và giải thưởng quan trọng."
+            }
+          ]
+        },
+        {
+          "section_id": "EH-001-S02",
+          "title": "Chính sách làm việc & Giờ giấc",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S02-01",
+              "title": "Giờ làm việc tiêu chuẩn",
+              "content": "Giờ làm việc chính thức của công ty là từ 8:00 đến 17:30, từ Thứ Hai đến Thứ Sáu. Giờ nghỉ trưa: 12:00 – 13:30. Tổng số giờ làm việc mỗi ngày là 8 giờ (không tính nghỉ trưa). Nhân viên có thể linh hoạt giờ vào làm trong khung từ 7:30 đến 9:00, với điều kiện đảm bảo đủ 8 giờ làm việc mỗi ngày và phải có sự đồng ý của quản lý trực tiếp.",
+              "tags": [
+                "giờ làm việc",
+                "lịch làm",
+                "linh hoạt giờ"
+              ],
+              "chunk_text": "Giờ làm việc: 8:00 – 17:30, Thứ Hai đến Thứ Sáu. Nghỉ trưa: 12:00 – 13:30. Cho phép linh hoạt giờ vào (7:30 – 9:00) nếu có sự đồng ý của quản lý và đảm bảo đủ 8 giờ/ngày."
+            },
+            {
+              "subsection_id": "EH-001-S02-02",
+              "title": "Chính sách làm việc từ xa (Work From Home - WFH)",
+              "content": "Nhân viên đã qua thời gian thử việc (ít nhất 2 tháng) được phép làm việc từ xa tối đa 2 ngày/tuần, tùy thuộc vào tính chất công việc và sự phê duyệt của quản lý. Yêu cầu khi WFH:\n- Đảm bảo kết nối internet ổn định.\n- Online đúng giờ làm việc và phản hồi tin nhắn trong vòng 15 phút.\n- Báo cáo tiến độ công việc hằng ngày vào cuối ngày (trước 17:30).\n- Tham dự đầy đủ các cuộc họp trực tuyến được lên lịch.\n- Không áp dụng WFH trong tuần đầu tiên của tháng (tuần báo cáo).",
+              "tags": [
+                "WFH",
+                "làm việc từ xa",
+                "remote work",
+                "hybrid"
+              ],
+              "chunk_text": "Nhân viên sau thử việc được làm việc từ xa (WFH) tối đa 2 ngày/tuần với sự phê duyệt của quản lý. Yêu cầu: online đúng giờ, phản hồi trong 15 phút, báo cáo cuối ngày, tham dự họp đầy đủ. Không WFH vào tuần đầu tháng."
+            },
+            {
+              "subsection_id": "EH-001-S02-03",
+              "title": "Chính sách làm thêm giờ (Overtime)",
+              "content": "Làm thêm giờ phải được sự phê duyệt trước bằng văn bản hoặc email từ quản lý cấp trên. Mức lương làm thêm giờ được tính theo quy định của Bộ Luật Lao động:\n- Ngày thường: 150% lương giờ thực tế.\n- Ngày nghỉ tuần (Thứ Bảy, Chủ Nhật): 200%.\n- Ngày lễ, Tết, ngày nghỉ có lương: 300%.\nSố giờ làm thêm tối đa không vượt quá 40 giờ/tháng và 200 giờ/năm (hoặc 300 giờ đối với một số ngành nghề đặc biệt theo quy định pháp luật). Nhân viên có thể chọn bù giờ thay vì nhận tiền làm thêm giờ, phải thực hiện trong vòng 30 ngày kể từ ngày làm thêm.",
+              "tags": [
+                "overtime",
+                "làm thêm giờ",
+                "lương overtime",
+                "bù giờ"
+              ],
+              "chunk_text": "Làm thêm giờ cần phê duyệt trước. Mức lương OT: ngày thường 150%, cuối tuần 200%, lễ Tết 300%. Giới hạn: 40 giờ/tháng, 200 giờ/năm. Có thể chọn bù giờ trong 30 ngày thay vì nhận tiền."
+            },
+            {
+              "subsection_id": "EH-001-S02-04",
+              "title": "Chấm công và quản lý thời gian",
+              "content": "Nhân viên sử dụng hệ thống chấm công điện tử (thẻ từ / vân tay / ứng dụng di động) để ghi nhận giờ vào – ra mỗi ngày. Quy định chấm công:\n- Quét thẻ/vân tay trong vòng 5 phút trước hoặc sau giờ bắt đầu làm việc.\n- Đi muộn hơn 15 phút: tính muộn 1 lần. Tích lũy 3 lần muộn trong tháng: trừ 0.5 ngày phép.\n- Quên chấm công: báo HR trong ngày làm việc đó, nếu báo sau thì không được ghi nhận.\n- Dữ liệu chấm công được tổng hợp cuối tháng để tính lương.",
+              "tags": [
+                "chấm công",
+                "timekeeping",
+                "đi muộn",
+                "phép năm"
+              ],
+              "chunk_text": "Chấm công bằng thẻ từ/vân tay/app. Đi muộn quá 15 phút tính 1 lần muộn; 3 lần muộn/tháng trừ 0.5 ngày phép. Quên chấm công phải báo HR trong ngày. Dữ liệu tổng hợp cuối tháng tính lương."
+            }
+          ]
+        },
+        {
+          "section_id": "EH-001-S03",
+          "title": "Chính sách nghỉ phép & Vắng mặt",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S03-01",
+              "title": "Phép năm (Annual Leave)",
+              "content": "Số ngày phép năm được tính theo thâm niên làm việc tại công ty:\n- Dưới 1 năm: 12 ngày/năm (tính theo tỷ lệ tháng làm việc).\n- Từ 1 đến dưới 5 năm: 14 ngày/năm.\n- Từ 5 đến dưới 10 năm: 16 ngày/năm.\n- Từ 10 năm trở lên: 18 ngày/năm.\nQuy trình xin phép: Đăng ký trên hệ thống HR ít nhất 3 ngày làm việc trước (đối với phép từ 1-2 ngày) và ít nhất 1 tuần trước (đối với phép từ 3 ngày trở lên). Phép năm không sử dụng hết có thể chuyển sang năm sau tối đa 5 ngày. Phần còn lại sẽ không được quy đổi thành tiền.",
+              "tags": [
+                "phép năm",
+                "annual leave",
+                "ngày nghỉ",
+                "thâm niên"
+              ],
+              "chunk_text": "Phép năm theo thâm niên: dưới 1 năm - 12 ngày; 1-5 năm - 14 ngày; 5-10 năm - 16 ngày; trên 10 năm - 18 ngày. Đăng ký trước ít nhất 3 ngày làm việc. Có thể chuyển tối đa 5 ngày sang năm sau."
+            },
+            {
+              "subsection_id": "EH-001-S03-02",
+              "title": "Phép đặc biệt có hưởng lương",
+              "content": "Các trường hợp nghỉ phép đặc biệt có hưởng lương theo Bộ Luật Lao động:\n- Kết hôn: 3 ngày làm việc.\n- Con ruột kết hôn: 1 ngày làm việc.\n- Bố/mẹ đẻ, bố/mẹ vợ/chồng, vợ/chồng hoặc con ruột mất: 3 ngày làm việc.\n- Ông/bà nội ngoại, anh/chị/em ruột mất: 1 ngày làm việc.\n- Vợ sinh con: 5 ngày làm việc (hưởng đủ lương).\nNgoài ra, công ty bổ sung thêm chính sách:\n- Nhân viên có con nhỏ dưới 12 tuổi bị ốm: 2 ngày/năm/con.\n- Sinh nhật nhân viên: 1 nửa ngày (buổi chiều), không cần đăng ký trước.",
+              "tags": [
+                "phép đặc biệt",
+                "nghỉ cưới",
+                "nghỉ tang",
+                "nghỉ đẻ vợ",
+                "sinh nhật"
+              ],
+              "chunk_text": "Phép đặc biệt có lương: kết hôn 3 ngày, con kết hôn 1 ngày, bố/mẹ/vợ/chồng/con mất 3 ngày, ông bà/anh em ruột mất 1 ngày, vợ sinh con 5 ngày. Công ty thêm: con ốm 2 ngày/năm/con, sinh nhật nửa ngày buổi chiều."
+            },
+            {
+              "subsection_id": "EH-001-S03-03",
+              "title": "Nghỉ ốm (Sick Leave)",
+              "content": "Nghỉ ốm có lương: Được hưởng theo quy định Bảo hiểm xã hội. Cần thông báo cho quản lý và HR trước 8:00 sáng hoặc sớm nhất có thể. Nghỉ ốm từ 2 ngày liên tiếp trở lên: cần nộp giấy xác nhận của cơ sở y tế khi quay lại làm việc. Công ty hỗ trợ thêm: Nghỉ ốm không có giấy tờ y tế: tối đa 2 ngày/năm (trừ vào phép năm). Nghỉ ốm quá số ngày được BHXH hỗ trợ: không hưởng lương phần vượt, hoặc trừ phép năm.",
+              "tags": [
+                "nghỉ ốm",
+                "sick leave",
+                "bảo hiểm xã hội",
+                "giấy tờ y tế"
+              ],
+              "chunk_text": "Nghỉ ốm theo quy định BHXH. Thông báo trước 8:00 sáng. Nghỉ ốm 2+ ngày cần giấy y tế. Công ty hỗ trợ tối đa 2 ngày ốm không giấy tờ/năm (trừ phép năm). Vượt quá số ngày BHXH hỗ trợ sẽ không hưởng lương."
+            },
+            {
+              "subsection_id": "EH-001-S03-04",
+              "title": "Nghỉ thai sản",
+              "content": "Chính sách nghỉ thai sản theo Luật Bảo hiểm xã hội Việt Nam:\n- Lao động nữ được nghỉ thai sản 6 tháng trước và sau sinh (trong đó, nghỉ trước sinh không quá 2 tháng).\n- Trường hợp sinh đôi trở lên: mỗi con tính thêm 1 tháng.\n- Lao động nam: 5–14 ngày tùy tình trạng sinh nở của vợ (theo quy định BHXH).\nTrong thời gian nghỉ thai sản: nhân viên nữ hưởng 100% mức bình quân tiền lương đóng BHXH của 6 tháng trước khi nghỉ. Sau khi kết thúc thai sản, được bảo lưu vị trí công việc hoặc bố trí công việc phù hợp.",
+              "tags": [
+                "thai sản",
+                "nghỉ sinh",
+                "maternity leave",
+                "paternity leave"
+              ],
+              "chunk_text": "Nghỉ thai sản: lao động nữ 6 tháng (nghỉ trước sinh tối đa 2 tháng), sinh đôi thêm 1 tháng/con. Lao động nam 5-14 ngày. Hưởng 100% lương bình quân đóng BHXH 6 tháng trước. Được bảo lưu vị trí sau khi quay lại."
+            }
+          ]
+        },
+        {
+          "section_id": "EH-001-S04",
+          "title": "Chính sách lương thưởng & Phúc lợi",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S04-01",
+              "title": "Cơ cấu lương",
+              "content": "Lương của nhân viên bao gồm:\n1. Lương cơ bản: Mức lương cố định được thỏa thuận trong hợp đồng lao động.\n2. Phụ cấp chức vụ: Áp dụng cho các vị trí quản lý và chuyên môn cao.\n3. Phụ cấp đi lại: [Mức cụ thể theo vị trí công việc và địa điểm làm việc].\n4. Phụ cấp điện thoại: Tùy theo yêu cầu công việc.\n5. Phụ cấp ăn trưa: [Mức cố định/ngày làm việc thực tế].\n6. Lương hiệu suất (KPI): Tính theo kết quả đánh giá hiệu suất hàng tháng/quý.\nLương được trả vào ngày [Ngày cụ thể] hàng tháng qua chuyển khoản ngân hàng.",
+              "tags": [
+                "lương",
+                "cơ cấu lương",
+                "phụ cấp",
+                "lương KPI"
+              ],
+              "chunk_text": "Cơ cấu lương gồm: lương cơ bản, phụ cấp chức vụ, phụ cấp đi lại, phụ cấp điện thoại, phụ cấp ăn trưa và lương hiệu suất KPI. Lương chuyển khoản vào ngày [X] hàng tháng."
+            },
+            {
+              "subsection_id": "EH-001-S04-02",
+              "title": "Thưởng (Bonus)",
+              "content": "Các loại thưởng tại công ty:\n1. Thưởng tháng 13: Tương đương 1 tháng lương cơ bản, trả trước Tết Nguyên Đán (điều kiện: làm đủ 12 tháng trong năm. Làm chưa đủ tính theo tỷ lệ).\n2. Thưởng hiệu suất (KPI Bonus): Quý/Năm, dựa trên kết quả đánh giá của cá nhân và bộ phận.\n3. Thưởng dự án: Thưởng đột xuất cho dự án hoàn thành xuất sắc.\n4. Thưởng nhân viên xuất sắc: Vinh danh hàng quý và năm, kèm thưởng bằng tiền hoặc hiện vật.\n5. Thưởng giới thiệu ứng viên (Referral Bonus): [Mức thưởng] khi giới thiệu thành công nhân viên mới qua thời gian thử việc.",
+              "tags": [
+                "thưởng",
+                "bonus",
+                "thưởng tháng 13",
+                "KPI bonus",
+                "thưởng tết"
+              ],
+              "chunk_text": "Các loại thưởng: tháng 13 (1 tháng lương cơ bản trước Tết), thưởng KPI theo quý/năm, thưởng dự án, thưởng nhân viên xuất sắc hàng quý/năm, và thưởng giới thiệu ứng viên."
+            },
+            {
+              "subsection_id": "EH-001-S04-03",
+              "title": "Bảo hiểm & Phúc lợi bắt buộc",
+              "content": "Công ty đóng đầy đủ các loại bảo hiểm bắt buộc theo quy định pháp luật:\n- Bảo hiểm xã hội (BHXH): Doanh nghiệp đóng 17,5%, nhân viên đóng 8% trên mức lương đóng BHXH.\n- Bảo hiểm y tế (BHYT): Doanh nghiệp đóng 3%, nhân viên đóng 1,5%.\n- Bảo hiểm thất nghiệp (BHTN): Doanh nghiệp đóng 1%, nhân viên đóng 1%.\nNgoài ra, công ty cung cấp thêm:\n- Bảo hiểm tai nạn 24/24 cho tất cả nhân viên chính thức.\n- Khám sức khỏe định kỳ hàng năm tại các bệnh viện/cơ sở y tế uy tín.",
+              "tags": [
+                "bảo hiểm",
+                "BHXH",
+                "BHYT",
+                "BHTN",
+                "khám sức khỏe định kỳ"
+              ],
+              "chunk_text": "Công ty đóng BHXH 17,5%, BHYT 3%, BHTN 1%. Nhân viên đóng BHXH 8%, BHYT 1,5%, BHTN 1%. Thêm: bảo hiểm tai nạn 24/24 và khám sức khỏe định kỳ hàng năm."
+            },
+            {
+              "subsection_id": "EH-001-S04-04",
+              "title": "Phúc lợi bổ sung",
+              "content": "Các phúc lợi bổ sung công ty cung cấp:\n1. Bảo hiểm sức khỏe cao cấp (Healthcare): Gói bảo hiểm y tế bổ sung cho nhân viên và người thân trực tiếp (vợ/chồng, con cái) sau 1 năm làm việc.\n2. Hỗ trợ học phí (Education Support): Hỗ trợ 50-100% học phí các khóa học liên quan đến công việc, tối đa [Mức tối đa]/năm.\n3. Quà tặng dịp lễ: Quà sinh nhật, Tết Trung Thu (cho con nhân viên), Tết Dương Lịch/Nguyên Đán.\n4. Hoạt động Team Building: Công ty tổ chức 1-2 chuyến team building/năm.\n5. Chương trình Employee Assistance (EAP): Hỗ trợ tư vấn tâm lý miễn phí (4 buổi/năm).\n6. Gym/Thể thao: Hỗ trợ [Mức] chi phí gym hoặc hoạt động thể thao hàng tháng.",
+              "tags": [
+                "phúc lợi",
+                "bảo hiểm sức khỏe",
+                "học phí",
+                "team building",
+                "EAP",
+                "gym"
+              ],
+              "chunk_text": "Phúc lợi bổ sung: bảo hiểm sức khỏe cao cấp cho nhân viên và gia đình (sau 1 năm), hỗ trợ học phí 50-100%, quà tặng lễ Tết, team building 1-2 lần/năm, tư vấn tâm lý EAP 4 buổi/năm, hỗ trợ chi phí gym."
+            }
+          ]
+        },
+        {
+          "section_id": "EH-001-S05",
+          "title": "Quy tắc ứng xử & Văn hóa công ty",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S05-01",
+              "title": "Quy tắc ứng xử chuyên nghiệp",
+              "content": "Nhân viên được kỳ vọng:\n- Duy trì thái độ chuyên nghiệp và tôn trọng trong mọi tương tác với đồng nghiệp, khách hàng và đối tác.\n- Giao tiếp rõ ràng, lịch sự qua mọi kênh: email, điện thoại, gặp mặt trực tiếp.\n- Trang phục phù hợp với môi trường làm việc. Trang phục công sở trang trọng vào Thứ Hai đến Thứ Tư; Thứ Năm và Thứ Sáu cho phép Smart Casual.\n- Giữ gìn vệ sinh nơi làm việc, bao gồm bàn làm việc và các khu vực chung.\n- Không sử dụng điện thoại cá nhân quá mức trong giờ làm việc.",
+              "tags": [
+                "quy tắc ứng xử",
+                "professional conduct",
+                "trang phục",
+                "giao tiếp"
+              ],
+              "chunk_text": "Nhân viên cần duy trì thái độ chuyên nghiệp, giao tiếp lịch sự. Trang phục: Thứ 2-4 công sở trang trọng, Thứ 5-6 Smart Casual. Giữ gìn vệ sinh nơi làm việc, hạn chế dùng điện thoại cá nhân trong giờ làm."
+            },
+            {
+              "subsection_id": "EH-001-S05-02",
+              "title": "Chính sách chống quấy rối và phân biệt đối xử",
+              "content": "Công ty cam kết xây dựng môi trường làm việc an toàn, bình đẳng, không có bất kỳ hình thức quấy rối hoặc phân biệt đối xử nào dựa trên giới tính, tuổi tác, dân tộc, tôn giáo, tình trạng hôn nhân, khuyết tật hoặc bất kỳ đặc điểm được pháp luật bảo vệ nào khác. Hành vi vi phạm bao gồm: quấy rối tình dục, bắt nạt (bullying), tạo môi trường làm việc thù địch. Quy trình xử lý: Nhân viên bị ảnh hưởng có thể báo cáo cho HR, quản lý trực tiếp, hoặc qua đường dây nóng nội bộ [Số điện thoại/Email]. Mọi khiếu nại được xử lý bảo mật và công bằng. Vi phạm có thể dẫn đến kỷ luật, bao gồm sa thải.",
+              "tags": [
+                "chống quấy rối",
+                "phân biệt đối xử",
+                "anti-harassment",
+                "DEI",
+                "môi trường làm việc"
+              ],
+              "chunk_text": "Công ty không chấp nhận quấy rối hoặc phân biệt đối xử dựa trên giới tính, tuổi, tôn giáo, v.v. Nhân viên bị ảnh hưởng báo cáo cho HR hoặc qua đường dây nóng. Khiếu nại được xử lý bảo mật. Vi phạm có thể bị sa thải."
+            },
+            {
+              "subsection_id": "EH-001-S05-03",
+              "title": "Chính sách bảo mật thông tin",
+              "content": "Nhân viên có nghĩa vụ bảo mật tất cả thông tin nội bộ, thông tin khách hàng và thông tin kinh doanh của công ty. Điều này bao gồm:\n- Không chia sẻ mật khẩu, tài khoản nội bộ với bên ngoài.\n- Không đăng thông tin nội bộ (tài liệu, dữ liệu, chiến lược) lên mạng xã hội.\n- Sử dụng thiết bị và phần mềm được công ty cung cấp/phê duyệt cho công việc.\n- Khi rời công ty: hoàn trả tất cả tài sản và tài liệu công ty, xóa dữ liệu công ty trên thiết bị cá nhân.\nVi phạm chính sách bảo mật có thể dẫn đến kỷ luật và/hoặc xử lý pháp lý.",
+              "tags": [
+                "bảo mật thông tin",
+                "NDA",
+                "confidentiality",
+                "dữ liệu",
+                "mật khẩu"
+              ],
+              "chunk_text": "Nhân viên phải bảo mật thông tin nội bộ, khách hàng và kinh doanh. Không chia sẻ mật khẩu, không đăng thông tin nội bộ lên mạng. Khi nghỉ việc phải hoàn trả tài sản và xóa dữ liệu công ty. Vi phạm có thể bị xử lý pháp lý."
+            },
+            {
+              "subsection_id": "EH-001-S05-04",
+              "title": "Sử dụng tài sản công ty",
+              "content": "Tài sản công ty (máy tính, điện thoại, xe, thiết bị) được cung cấp phục vụ mục đích công việc. Nguyên tắc sử dụng:\n- Sử dụng đúng mục đích công việc, bảo quản cẩn thận.\n- Không cài đặt phần mềm trái phép hoặc không được phê duyệt.\n- Báo cáo ngay khi thiết bị bị hỏng, thất lạc hoặc bị xâm phạm.\n- Không mang tài sản công ty ra khỏi cơ sở mà không có sự cho phép.\nSử dụng cá nhân ở mức hợp lý được chấp nhận (ví dụ: tra cứu thông tin cá nhân) nhưng không được lạm dụng.",
+              "tags": [
+                "tài sản công ty",
+                "máy tính",
+                "thiết bị",
+                "sử dụng tài sản"
+              ],
+              "chunk_text": "Tài sản công ty (máy tính, điện thoại, xe) dùng cho mục đích công việc. Không cài phần mềm trái phép, báo cáo khi hỏng/mất. Không mang tài sản ra ngoài không có phép. Sử dụng cá nhân ở mức hợp lý được chấp nhận."
+            }
+          ]
+        },
+        {
+          "section_id": "EH-001-S06",
+          "title": "Đánh giá hiệu suất & Phát triển nghề nghiệp",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S06-01",
+              "title": "Chu kỳ đánh giá hiệu suất",
+              "content": "Công ty thực hiện đánh giá hiệu suất theo 2 cấp độ:\n1. Đánh giá giữa năm (Mid-year Review): Tháng 6-7 hàng năm. Mục tiêu: kiểm tra tiến độ mục tiêu, điều chỉnh kế hoạch phát triển.\n2. Đánh giá cuối năm (Annual Review): Tháng 11-12 hàng năm. Mục tiêu: đánh giá toàn diện, xem xét tăng lương, thăng chức, thưởng.\nNgoài ra, feedback 360 độ được thu thập từ quản lý, đồng nghiệp và cấp dưới (nếu có). Nhân viên tự đánh giá trước khi gặp quản lý trực tiếp để thảo luận.",
+              "tags": [
+                "đánh giá hiệu suất",
+                "performance review",
+                "KPI",
+                "tăng lương",
+                "thăng chức"
+              ],
+              "chunk_text": "Đánh giá hiệu suất 2 lần/năm: giữa năm (tháng 6-7) để điều chỉnh mục tiêu, và cuối năm (tháng 11-12) để xem xét tăng lương/thăng chức. Có thêm feedback 360 độ và tự đánh giá."
+            },
+            {
+              "subsection_id": "EH-001-S06-02",
+              "title": "Lộ trình phát triển & Thăng tiến",
+              "content": "Công ty cam kết hỗ trợ nhân viên phát triển theo 2 hướng:\n1. Thăng tiến theo chiều dọc (Vertical): Tăng cấp bậc, vị trí quản lý.\n2. Phát triển theo chiều ngang (Lateral): Mở rộng kỹ năng, chuyển đổi vai trò.\nĐiều kiện xét thăng chức:\n- Làm việc tại công ty tối thiểu 1 năm tại vị trí hiện tại.\n- Đánh giá hiệu suất đạt từ mức 'Tốt' trở lên trong 2 kỳ liên tiếp.\n- Có kế hoạch phát triển rõ ràng và đã hoàn thành các yêu cầu năng lực của vị trí mới.\n- Được quản lý trực tiếp đề xuất và HRBP/HR Director phê duyệt.",
+              "tags": [
+                "thăng chức",
+                "lộ trình nghề nghiệp",
+                "career development",
+                "promotion"
+              ],
+              "chunk_text": "Phát triển nghề nghiệp theo chiều dọc (thăng chức) và chiều ngang (mở rộng kỹ năng). Điều kiện thăng chức: tối thiểu 1 năm ở vị trí hiện tại, đánh giá 'Tốt' 2 kỳ liên tiếp, có kế hoạch phát triển rõ ràng."
+            },
+            {
+              "subsection_id": "EH-001-S06-03",
+              "title": "Đào tạo & Phát triển kỹ năng",
+              "content": "Các chương trình đào tạo tại công ty:\n1. Đào tạo nội bộ: Workshop, seminar do các chuyên gia nội bộ tổ chức.\n2. Đào tạo bên ngoài: Công ty hỗ trợ chi phí tham gia khóa học, hội nghị, chứng chỉ chuyên môn.\n3. Chương trình mentoring: Kết nối nhân viên mới/junior với senior/leader để định hướng.\n4. E-learning Platform: Truy cập miễn phí nền tảng học trực tuyến [Tên nền tảng].\n5. Job Rotation: Chương trình luân chuyển công việc giữa các phòng ban.\nNgân sách đào tạo: [Mức ngân sách/người/năm]. Nhân viên cần lập kế hoạch học tập và được quản lý phê duyệt trước.",
+              "tags": [
+                "đào tạo",
+                "training",
+                "e-learning",
+                "mentoring",
+                "phát triển kỹ năng"
+              ],
+              "chunk_text": "Chương trình đào tạo: đào tạo nội bộ, hỗ trợ chi phí khóa học bên ngoài, mentoring, e-learning platform, job rotation giữa phòng ban. Ngân sách đào tạo [X]/người/năm, cần quản lý phê duyệt."
+            }
+          ]
+        },
+        {
+          "section_id": "EH-001-S07",
+          "title": "Kỷ luật lao động & Chấm dứt hợp đồng",
+          "subsections": [
+            {
+              "subsection_id": "EH-001-S07-01",
+              "title": "Quy trình xử lý kỷ luật",
+              "content": "Các hình thức kỷ luật theo thứ tự tăng dần:\n1. Nhắc nhở miệng (Verbal Warning): Lần vi phạm nhẹ đầu tiên.\n2. Cảnh cáo bằng văn bản (Written Warning): Vi phạm lặp lại hoặc vi phạm ở mức độ trung bình.\n3. Đình chỉ công việc có lương (Suspension with Pay): Vi phạm nghiêm trọng hơn, trong khi điều tra.\n4. Sa thải (Termination): Vi phạm nghiêm trọng hoặc tái phạm sau các biện pháp trước đó.\nVi phạm bị sa thải ngay lập tức (không qua các bước trước): trộm cắp tài sản công ty, gian lận, bạo lực nơi làm việc, vi phạm chính sách bảo mật nghiêm trọng.",
+              "tags": [
+                "kỷ luật",
+                "sa thải",
+                "cảnh cáo",
+                "vi phạm",
+                "disciplinary"
+              ],
+              "chunk_text": "Quy trình kỷ luật: nhắc nhở miệng → cảnh cáo văn bản → đình chỉ có lương → sa thải. Sa thải ngay: trộm cắp, gian lận, bạo lực, vi phạm bảo mật nghiêm trọng."
+            },
+            {
+              "subsection_id": "EH-001-S07-02",
+              "title": "Thủ tục nghỉ việc (Offboarding)",
+              "content": "Khi nhân viên nghỉ việc tự nguyện:\n1. Nộp đơn xin nghỉ việc trước ít nhất 30 ngày (nhân viên) hoặc 45 ngày (cấp quản lý).\n2. Bàn giao công việc đầy đủ cho người kế nhiệm hoặc quản lý.\n3. Hoàn trả tài sản công ty: máy tính, thẻ nhân viên, thiết bị, tài liệu.\n4. Xóa dữ liệu công ty trên thiết bị cá nhân.\n5. Hoàn thành exit interview với HR.\n6. Nhận xác nhận hoàn thành bàn giao và giấy xác nhận thôi việc.\nQuyết toán lương: trong 7 ngày làm việc kể từ ngày chính thức nghỉ việc.",
+              "tags": [
+                "nghỉ việc",
+                "offboarding",
+                "bàn giao",
+                "exit interview",
+                "quyết toán"
+              ],
+              "chunk_text": "Nghỉ việc tự nguyện cần báo trước 30 ngày (45 ngày cho quản lý). Thủ tục: bàn giao công việc, hoàn trả tài sản, xóa dữ liệu cá nhân, exit interview với HR. Quyết toán lương trong 7 ngày làm việc sau khi nghỉ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "doc_id": "RO-002",
+      "title": "Quy trình tuyển dụng & Onboarding",
+      "category": "recruitment_onboarding",
+      "language": "vi",
+      "sections": [
+        {
+          "section_id": "RO-002-S01",
+          "title": "Quy trình tuyển dụng",
+          "subsections": [
+            {
+              "subsection_id": "RO-002-S01-01",
+              "title": "Tổng quan quy trình tuyển dụng",
+              "content": "Quy trình tuyển dụng của công ty gồm 7 giai đoạn chính:\n1. Xác định nhu cầu tuyển dụng\n2. Phê duyệt vị trí tuyển dụng\n3. Đăng tuyển và tiếp nhận hồ sơ\n4. Sàng lọc hồ sơ\n5. Phỏng vấn và đánh giá\n6. Đề xuất tuyển dụng và phê duyệt\n7. Gửi Offer và ký hợp đồng\nThời gian trung bình cho toàn bộ quy trình: 3-6 tuần (tùy vị trí). Mục tiêu: đảm bảo tìm được ứng viên phù hợp nhất với văn hóa và yêu cầu công việc của công ty.",
+              "tags": [
+                "tuyển dụng",
+                "quy trình tuyển dụng",
+                "recruitment process"
+              ],
+              "chunk_text": "Quy trình tuyển dụng 7 giai đoạn: xác định nhu cầu → phê duyệt vị trí → đăng tuyển & nhận hồ sơ → sàng lọc → phỏng vấn → đề xuất → offer & ký hợp đồng. Thời gian trung bình 3-6 tuần."
+            },
+            {
+              "subsection_id": "RO-002-S01-02",
+              "title": "Giai đoạn 1 & 2: Xác định nhu cầu và phê duyệt vị trí",
+              "content": "Khi có nhu cầu tuyển dụng, quản lý bộ phận cần:\n1. Điền vào mẫu 'Yêu cầu tuyển dụng' (Job Requisition Form - JRF) bao gồm: tên vị trí, số lượng, lý do tuyển, mô tả công việc, yêu cầu năng lực, mức lương dự kiến, thời hạn cần có người.\n2. Trình JRF cho cấp quản lý cao hơn và Finance phê duyệt ngân sách.\n3. Sau phê duyệt, chuyển JRF cho bộ phận HR/TA (Talent Acquisition) để triển khai tuyển dụng.\nThời gian phê duyệt nội bộ: 3-5 ngày làm việc.",
+              "tags": [
+                "JRF",
+                "job requisition",
+                "phê duyệt tuyển dụng",
+                "nhu cầu tuyển"
+              ],
+              "chunk_text": "Để tuyển dụng, quản lý bộ phận điền Job Requisition Form (JRF) gồm tên vị trí, số lượng, lý do, mô tả, yêu cầu, lương dự kiến và thời hạn. Trình phê duyệt lên cấp trên và Finance. Thời gian phê duyệt 3-5 ngày."
+            },
+            {
+              "subsection_id": "RO-002-S01-03",
+              "title": "Giai đoạn 3: Đăng tuyển và tiếp nhận hồ sơ",
+              "content": "Các kênh tuyển dụng được sử dụng:\n- Job Boards: LinkedIn, TopCV, VietnamWorks, CareerBuilder, Indeed.\n- Website tuyển dụng nội bộ (Career Page trên website công ty).\n- Mạng xã hội: Facebook Fanpage, LinkedIn Company Page.\n- Chương trình giới thiệu nội bộ (Employee Referral Program).\n- Headhunting/Executive Search: Cho các vị trí cấp cao.\n- Campus Recruitment: Hợp tác với các trường đại học cho vị trí fresher/internship.\nHR phải đảm bảo JD (Job Description) rõ ràng, hấp dẫn và không chứa nội dung phân biệt đối xử.",
+              "tags": [
+                "đăng tuyển",
+                "kênh tuyển dụng",
+                "LinkedIn",
+                "TopCV",
+                "job boards",
+                "referral"
+              ],
+              "chunk_text": "Kênh tuyển dụng: LinkedIn, TopCV, VietnamWorks, CareerBuilder, Indeed, website công ty, mạng xã hội, referral nội bộ, headhunting cho vị trí cấp cao, campus recruitment cho fresher/intern."
+            },
+            {
+              "subsection_id": "RO-002-S01-04",
+              "title": "Giai đoạn 4: Sàng lọc hồ sơ (CV Screening)",
+              "content": "Quy trình sàng lọc hồ sơ:\n1. HR/TA thu thập và phân loại hồ sơ từ các kênh tuyển dụng vào ATS (Applicant Tracking System).\n2. Tiêu chí sàng lọc vòng 1 (HR): Bằng cấp, kinh nghiệm liên quan, kỹ năng kỹ thuật cơ bản, không có yếu tố loại (deal-breaker).\n3. Hồ sơ đạt vòng 1 được chuyển cho Hiring Manager để xem xét kỹ hơn.\n4. Tiêu chí sàng lọc vòng 2 (Hiring Manager): Phù hợp kỹ thuật chuyên sâu, kinh nghiệm dự án tương tự.\n5. Kết quả sàng lọc phải được phản hồi trong 5 ngày làm việc kể từ khi nhận hồ sơ.",
+              "tags": [
+                "sàng lọc CV",
+                "CV screening",
+                "ATS",
+                "hiring manager",
+                "tiêu chí tuyển dụng"
+              ],
+              "chunk_text": "Sàng lọc hồ sơ 2 vòng: HR sàng lọc bằng cấp/kinh nghiệm/kỹ năng cơ bản, sau đó Hiring Manager đánh giá kỹ thuật chuyên sâu. Hồ sơ được lưu vào ATS. Phản hồi kết quả trong 5 ngày làm việc."
+            },
+            {
+              "subsection_id": "RO-002-S01-05",
+              "title": "Giai đoạn 5: Phỏng vấn và đánh giá",
+              "content": "Cấu trúc vòng phỏng vấn điển hình (có thể điều chỉnh theo vị trí):\n\nVòng 1 - Phone/Video Screening (HR, 30-45 phút):\n- Xác nhận thông tin CV.\n- Đánh giá kỹ năng giao tiếp, sự phù hợp văn hóa cơ bản.\n- Thảo luận kỳ vọng lương, thời gian có thể bắt đầu.\n\nVòng 2 - Phỏng vấn kỹ thuật/chuyên môn (Hiring Manager + Team Lead, 60-90 phút):\n- Kiểm tra kiến thức chuyên môn qua bài test/case study.\n- Đánh giá tư duy giải quyết vấn đề.\n\nVòng 3 - Phỏng vấn văn hóa/Ban Giám đốc (Senior Manager/Director, 30-60 phút):\n- Đánh giá sự phù hợp văn hóa tổng thể.\n- Thảo luận định hướng phát triển.\n\nVòng 4 (Tùy chọn) - Bài kiểm tra năng lực / Presentation:\n- Áp dụng cho một số vị trí đặc thù.",
+              "tags": [
+                "phỏng vấn",
+                "interview",
+                "vòng phỏng vấn",
+                "kỹ thuật",
+                "văn hóa",
+                "panel interview"
+              ],
+              "chunk_text": "Quy trình phỏng vấn: Vòng 1 - HR phone/video screening (30-45 phút) kiểm tra thông tin CV, kỳ vọng lương. Vòng 2 - Kỹ thuật với Hiring Manager (60-90 phút) test/case study. Vòng 3 - Văn hóa với Senior Manager/Director (30-60 phút). Vòng 4 tùy chọn: bài kiểm tra năng lực."
+            },
+            {
+              "subsection_id": "RO-002-S01-06",
+              "title": "Giai đoạn 6 & 7: Đề xuất tuyển dụng và Gửi Offer",
+              "content": "Sau khi chốt ứng viên:\n1. Hiring Manager điền 'Mẫu đề xuất tuyển dụng' (Hiring Proposal) bao gồm: thông tin ứng viên, vị trí, mức lương đề xuất, ngày bắt đầu dự kiến, lý do chọn.\n2. HR/HRBP review và trình Giám đốc/CHRO phê duyệt.\n3. HR gửi Offer Letter (thư chào mời) cho ứng viên qua email, gồm: chức danh, phòng ban, ngày bắt đầu, lương, quyền lợi chính, thời hạn phản hồi (thường 3-5 ngày làm việc).\n4. Ứng viên chấp nhận → ký hợp đồng điện tử hoặc trực tiếp.\n5. Nếu ứng viên từ chối: thương lượng lại hoặc chuyển sang ứng viên tiếp theo.\nThông báo kết quả cho ứng viên không đạt: trong 7 ngày sau phỏng vấn cuối.",
+              "tags": [
+                "offer letter",
+                "hiring proposal",
+                "mức lương",
+                "thông báo kết quả",
+                "ký hợp đồng"
+              ],
+              "chunk_text": "Sau khi chốt ứng viên: Hiring Manager điền Hiring Proposal, HR trình phê duyệt, gửi Offer Letter (chức danh, lương, quyền lợi, thời hạn phản hồi 3-5 ngày). Ứng viên không đạt được thông báo trong 7 ngày sau phỏng vấn cuối."
+            }
+          ]
+        },
+        {
+          "section_id": "RO-002-S02",
+          "title": "Chương trình Onboarding",
+          "subsections": [
+            {
+              "subsection_id": "RO-002-S02-01",
+              "title": "Tổng quan chương trình Onboarding",
+              "content": "Chương trình Onboarding của công ty được thiết kế theo mô hình '4C':\n- Compliance: Hoàn thành các thủ tục pháp lý, giấy tờ, quy định.\n- Clarification: Hiểu rõ vai trò, trách nhiệm và mục tiêu công việc.\n- Culture: Hòa nhập với văn hóa và giá trị của công ty.\n- Connection: Xây dựng mối quan hệ với đồng nghiệp và quản lý.\nChương trình kéo dài trong 90 ngày đầu, chia thành 3 giai đoạn: Tuần 1 (Pre-boarding & Day 1), Tháng 1 (30 ngày đầu), và 90 ngày.",
+              "tags": [
+                "onboarding",
+                "4C",
+                "90 ngày",
+                "hòa nhập",
+                "nhân viên mới"
+              ],
+              "chunk_text": "Onboarding theo mô hình 4C: Compliance (thủ tục pháp lý), Clarification (hiểu vai trò), Culture (hòa nhập văn hóa), Connection (xây dựng quan hệ). Chương trình kéo dài 90 ngày: Pre-boarding, Tháng 1, và 90 ngày."
+            },
+            {
+              "subsection_id": "RO-002-S02-02",
+              "title": "Pre-boarding (Trước ngày đầu tiên)",
+              "content": "Trong khoảng thời gian từ khi nhân viên ký hợp đồng đến ngày đầu tiên làm việc, HR và Hiring Manager cần:\n\nHR thực hiện:\n- Gửi email chào mừng kèm thông tin ngày bắt đầu, địa điểm, giờ có mặt.\n- Gửi checklist tài liệu cần mang theo ngày đầu tiên.\n- Tạo tài khoản hệ thống (email, phần mềm nội bộ, badge).\n- Chuẩn bị welcome kit (máy tính, badge, tài liệu, quà chào mừng).\n\nHiring Manager thực hiện:\n- Thông báo với team về thành viên mới.\n- Phân công Buddy (người hướng dẫn) cho nhân viên mới.\n- Chuẩn bị workspace.\n- Lên kế hoạch training 30 ngày đầu.",
+              "tags": [
+                "pre-boarding",
+                "ngày đầu tiên",
+                "tài khoản hệ thống",
+                "buddy",
+                "welcome kit"
+              ],
+              "chunk_text": "Pre-boarding: HR gửi email chào mừng, checklist tài liệu, tạo tài khoản hệ thống và chuẩn bị welcome kit. Hiring Manager thông báo với team, phân công Buddy, chuẩn bị workspace và lên kế hoạch training."
+            },
+            {
+              "subsection_id": "RO-002-S02-03",
+              "title": "Ngày đầu tiên (Day 1)",
+              "content": "Lịch trình ngày đầu tiên:\n\n8:00 – 9:00: Tiếp đón tại lễ tân, làm badge, hướng dẫn tham quan văn phòng.\n9:00 – 10:30: Gặp gỡ HR để hoàn thiện giấy tờ, ký hợp đồng (nếu chưa), giải thích chính sách cơ bản.\n10:30 – 12:00: Orientation Session – Giới thiệu công ty, lịch sử, văn hóa, giá trị, cơ cấu tổ chức.\n12:00 – 13:30: Lunch cùng team và Buddy.\n13:30 – 15:00: Giới thiệu công cụ và hệ thống nội bộ (email, Slack, hệ thống quản lý công việc...).\n15:00 – 16:30: Gặp Hiring Manager: thảo luận kỳ vọng, kế hoạch 30-60-90 ngày.\n16:30 – 17:00: Wrap-up với Buddy, giải đáp thắc mắc.",
+              "tags": [
+                "ngày đầu tiên",
+                "day 1",
+                "orientation",
+                "lịch trình",
+                "onboarding schedule"
+              ],
+              "chunk_text": "Ngày đầu tiên: Tiếp đón và làm thẻ (8:00), hoàn thiện giấy tờ với HR (9:00), Orientation giới thiệu công ty (10:30), lunch cùng team (12:00), giới thiệu hệ thống nội bộ (13:30), gặp Hiring Manager lên kế hoạch 30-60-90 ngày (15:00)."
+            },
+            {
+              "subsection_id": "RO-002-S02-04",
+              "title": "30 ngày đầu tiên",
+              "content": "Mục tiêu trong 30 ngày đầu:\n- Hoàn thành tất cả đào tạo bắt buộc (Compliance Training): An toàn thông tin, phòng chống quấy rối, quy định pháp lý...\n- Tìm hiểu sâu về sản phẩm/dịch vụ của công ty.\n- Gặp gỡ và xây dựng mối quan hệ với các bên liên quan chính (stakeholders).\n- Hoàn thành bàn giao công việc (nếu nhận từ người cũ).\n- Nắm rõ mục tiêu 90 ngày và KPI được giao.\n- Check-in hàng tuần với Buddy và hàng 2 tuần với Hiring Manager.\nCuối tuần thứ 4: HR thực hiện cuộc gặp '30-day Check-in' để đánh giá mức độ hòa nhập.",
+              "tags": [
+                "30 ngày đầu",
+                "đào tạo bắt buộc",
+                "compliance training",
+                "30-day check-in",
+                "KPI"
+              ],
+              "chunk_text": "30 ngày đầu: hoàn thành đào tạo bắt buộc (bảo mật, phòng chống quấy rối), tìm hiểu sản phẩm/dịch vụ, gặp gỡ stakeholders, nắm KPI 90 ngày. Check-in hàng tuần với Buddy, 2 tuần/lần với Hiring Manager. HR gặp 30-day check-in."
+            },
+            {
+              "subsection_id": "RO-002-S02-05",
+              "title": "60 ngày và 90 ngày",
+              "content": "Mốc 60 ngày:\n- Nhân viên bắt đầu đóng góp độc lập vào các dự án/nhiệm vụ.\n- Hoàn thành ít nhất 1 dự án hoặc deliverable có giá trị.\n- Check-in 60-day với Hiring Manager: đánh giá tiến độ, điều chỉnh kế hoạch.\n- Bắt đầu nhận feedback thường xuyên từ quản lý và đồng nghiệp.\n\nMốc 90 ngày (Kết thúc thử việc):\n- Đánh giá toàn diện hiệu suất thử việc (Probation Review).\n- Nhân viên tự đánh giá theo form được cung cấp.\n- Hiring Manager và HR thực hiện buổi đánh giá chính thức.\n- Kết quả: Thông qua thử việc (chính thức ký HĐLĐ dài hạn), gia hạn thêm 30-60 ngày, hoặc kết thúc hợp đồng thử việc.\n- Thông báo kết quả thử việc trước ngày kết thúc ít nhất 3 ngày làm việc.",
+              "tags": [
+                "60 ngày",
+                "90 ngày",
+                "kết thúc thử việc",
+                "probation review",
+                "đánh giá thử việc"
+              ],
+              "chunk_text": "60 ngày: nhân viên đóng góp độc lập, hoàn thành ít nhất 1 deliverable, check-in với Hiring Manager. 90 ngày: Probation Review toàn diện – nhân viên tự đánh giá, Hiring Manager + HR đánh giá chính thức. Kết quả: thông qua / gia hạn / kết thúc. Thông báo trước 3 ngày."
+            },
+            {
+              "subsection_id": "RO-002-S02-06",
+              "title": "Chương trình Buddy",
+              "content": "Mỗi nhân viên mới được phân công 1 Buddy – là nhân viên cùng hoặc liên quan đến bộ phận, có kinh nghiệm ít nhất 1 năm tại công ty, và tình nguyện tham gia chương trình.\n\nNhiệm vụ của Buddy:\n- Là đầu mối hỗ trợ phi chính thức cho nhân viên mới.\n- Trả lời câu hỏi về văn hóa, quy trình, không phải về kỹ thuật chuyên môn.\n- Check-in hàng tuần trong 4 tuần đầu, sau đó linh hoạt.\n- Giới thiệu nhân viên mới với các phòng ban khác.\n\nQuyền lợi của Buddy:\n- Được ghi nhận vào hồ sơ năng lực.\n- Nhận phụ cấp Buddy: [Mức phụ cấp] cho mỗi nhân viên hướng dẫn thành công qua thử việc.",
+              "tags": [
+                "buddy",
+                "mentor",
+                "người hướng dẫn",
+                "onboarding buddy",
+                "chương trình buddy"
+              ],
+              "chunk_text": "Mỗi nhân viên mới có 1 Buddy (nhân viên tình nguyện, trên 1 năm kinh nghiệm). Buddy hỗ trợ về văn hóa/quy trình, check-in hàng tuần 4 tuần đầu. Quyền lợi: ghi nhận năng lực và nhận phụ cấp khi nhân viên mới qua thử việc."
+            },
+            {
+              "subsection_id": "RO-002-S02-07",
+              "title": "Tài liệu cần chuẩn bị khi bắt đầu làm việc",
+              "content": "Nhân viên mới cần chuẩn bị và nộp các tài liệu sau trong tuần đầu tiên:\n- CMND/CCCD bản gốc và 2 bản photo công chứng.\n- Sổ hộ khẩu (bản photo công chứng) hoặc Giấy xác nhận tạm trú/thường trú.\n- Bằng cấp, chứng chỉ liên quan (bản photo công chứng).\n- Ảnh thẻ 3x4 (4 ảnh) nền trắng hoặc xanh.\n- Sổ bảo hiểm xã hội (nếu đã có).\n- Số tài khoản ngân hàng.\n- Hộ chiếu (nếu có, cho mục đích công tác quốc tế).\n- Giấy khám sức khỏe (một số vị trí yêu cầu).\n- Giấy xác nhận kinh nghiệm làm việc từ nơi cũ (nếu yêu cầu).",
+              "tags": [
+                "hồ sơ nhân viên",
+                "tài liệu",
+                "CCCD",
+                "sổ BHXH",
+                "tài khoản ngân hàng"
+              ],
+              "chunk_text": "Tài liệu cần nộp tuần đầu: CMND/CCCD (gốc + 2 bản công chứng), hộ khẩu (công chứng), bằng cấp/chứng chỉ (công chứng), 4 ảnh 3x4, sổ BHXH (nếu có), số tài khoản ngân hàng, giấy khám sức khỏe (một số vị trí)."
+            }
+          ]
+        },
+        {
+          "section_id": "RO-002-S03",
+          "title": "Thời gian thử việc",
+          "subsections": [
+            {
+              "subsection_id": "RO-002-S03-01",
+              "title": "Quy định thời gian và lương thử việc",
+              "content": "Thời gian thử việc theo quy định pháp luật và chính sách công ty:\n- Vị trí chuyên môn kỹ thuật cao (yêu cầu bằng đại học trở lên): 60 ngày.\n- Vị trí cần trình độ trung cấp, cao đẳng: 30 ngày.\n- Vị trí lao động phổ thông: 6 ngày.\n\nLương thử việc:\n- Tối thiểu bằng 85% lương của chức danh đó (theo quy định pháp luật).\n- Chính sách công ty: 100% lương thỏa thuận trong hợp đồng thử việc.\n\nChấm dứt trong thời gian thử việc:\n- Cả hai bên đều có quyền chấm dứt hợp đồng thử việc mà không cần báo trước.\n- Nếu kết quả thử việc đạt: Ký hợp đồng lao động chính thức trong 3 ngày làm việc.",
+              "tags": [
+                "thử việc",
+                "lương thử việc",
+                "probation period",
+                "hợp đồng thử việc"
+              ],
+              "chunk_text": "Thời gian thử việc: vị trí đại học 60 ngày, trung cấp/cao đẳng 30 ngày, lao động phổ thông 6 ngày. Lương thử việc: 100% lương thỏa thuận (tối thiểu theo luật là 85%). Hai bên có thể chấm dứt không cần báo trước."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "doc_id": "FAQ-003",
+      "title": "Danh mục câu hỏi thường gặp (FAQ)",
+      "category": "faq",
+      "language": "vi",
+      "sections": [
+        {
+          "section_id": "FAQ-003-S01",
+          "title": "FAQ - Tuyển dụng",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S01-001",
+              "question": "Tôi có thể nộp hồ sơ qua những kênh nào?",
+              "answer": "Bạn có thể nộp hồ sơ qua các kênh sau: (1) Website tuyển dụng của công ty tại [URL]; (2) Các trang tuyển dụng: LinkedIn, TopCV, VietnamWorks, CareerBuilder; (3) Email trực tiếp đến HR: hr@company.com; (4) Được giới thiệu bởi nhân viên nội bộ thông qua chương trình Referral.",
+              "tags": [
+                "nộp hồ sơ",
+                "ứng tuyển",
+                "kênh tuyển dụng"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-002",
+                "FAQ-003-S01-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S01-002",
+              "question": "Quy trình phỏng vấn gồm mấy vòng và kéo dài bao lâu?",
+              "answer": "Thông thường, quy trình phỏng vấn gồm 3 vòng chính: Vòng 1 - HR Screening qua điện thoại/video (30-45 phút), Vòng 2 - Phỏng vấn kỹ thuật với Hiring Manager (60-90 phút, có thể kèm bài test), Vòng 3 - Phỏng vấn văn hóa với cấp quản lý cao hơn (30-60 phút). Tổng thời gian từ khi nộp hồ sơ đến khi nhận Offer thường từ 3-6 tuần.",
+              "tags": [
+                "phỏng vấn",
+                "số vòng phỏng vấn",
+                "thời gian tuyển dụng"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-001",
+                "FAQ-003-S01-004"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S01-003",
+              "question": "Tôi có thể ứng tuyển vào nhiều vị trí cùng một lúc không?",
+              "answer": "Có, bạn có thể ứng tuyển vào nhiều vị trí khác nhau tại công ty cùng lúc. Tuy nhiên, chúng tôi khuyến khích bạn ứng tuyển vào những vị trí thực sự phù hợp với kinh nghiệm và định hướng nghề nghiệp của bạn. HR sẽ xem xét hồ sơ của bạn cho từng vị trí một cách độc lập.",
+              "tags": [
+                "ứng tuyển nhiều vị trí",
+                "nộp hồ sơ"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-001"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S01-004",
+              "question": "Sau khi phỏng vấn, bao lâu tôi sẽ nhận được kết quả?",
+              "answer": "Công ty cam kết thông báo kết quả phỏng vấn trong vòng 7 ngày làm việc kể từ buổi phỏng vấn cuối cùng. Nếu bạn không nhận được thông báo sau thời gian này, bạn có thể chủ động liên hệ với HR qua email hoặc số điện thoại được cung cấp.",
+              "tags": [
+                "kết quả phỏng vấn",
+                "thông báo kết quả",
+                "phản hồi"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-002",
+                "FAQ-003-S01-005"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S01-005",
+              "question": "Offer Letter bao gồm những thông tin gì?",
+              "answer": "Offer Letter của công ty bao gồm: Chức danh công việc và phòng ban, Ngày bắt đầu làm việc dự kiến, Mức lương cơ bản và cơ cấu lương chi tiết, Quyền lợi chính (bảo hiểm, ngày phép, thưởng), Thời gian thử việc, Điều kiện của offer (ví dụ: kết quả kiểm tra tham chiếu). Bạn có 3-5 ngày làm việc để xem xét và phản hồi.",
+              "tags": [
+                "offer letter",
+                "thư mời làm việc",
+                "mức lương",
+                "quyền lợi"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-004"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S01-006",
+              "question": "Công ty có chương trình thực tập (internship) không?",
+              "answer": "Có, công ty có chương trình thực tập dành cho sinh viên từ năm 3 trở lên hoặc mới tốt nghiệp. Chương trình thực tập thường kéo dài 3-6 tháng, có phụ cấp thực tập, và có cơ hội được giữ lại làm chính thức nếu đánh giá tốt. Thông tin tuyển dụng thực tập được đăng trên website công ty và các kênh tuyển dụng.",
+              "tags": [
+                "thực tập",
+                "internship",
+                "sinh viên",
+                "fresher"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-001"
+              ]
+            }
+          ]
+        },
+        {
+          "section_id": "FAQ-003-S02",
+          "title": "FAQ - Onboarding & Ngày đầu tiên",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S02-001",
+              "question": "Ngày đầu tiên tôi cần mang theo những gì?",
+              "answer": "Ngày đầu tiên đi làm, bạn cần mang theo: CMND/CCCD bản gốc và 2 bản photo công chứng, Sổ hộ khẩu (bản photo công chứng), Bằng cấp/chứng chỉ liên quan (bản photo công chứng), 4 ảnh thẻ 3x4 (nền trắng hoặc xanh), Sổ BHXH (nếu có), Thông tin số tài khoản ngân hàng. HR sẽ gửi email nhắc nhở chi tiết trước ngày đầu tiên.",
+              "tags": [
+                "ngày đầu tiên",
+                "tài liệu",
+                "hồ sơ nhân viên mới"
+              ],
+              "related_faqs": [
+                "FAQ-003-S02-002"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S02-002",
+              "question": "Giờ nào tôi nên có mặt vào ngày đầu tiên?",
+              "answer": "Bạn nên có mặt tại [Địa chỉ văn phòng] lúc 8:00 sáng vào ngày đầu tiên. Vui lòng đến lễ tân và thông báo tên, vị trí ứng tuyển. HR hoặc Buddy được phân công sẽ ra đón bạn. Nếu có vấn đề phát sinh (tắc đường, sự cố), vui lòng thông báo sớm cho HR qua số điện thoại đã được cung cấp.",
+              "tags": [
+                "ngày đầu tiên",
+                "giờ có mặt",
+                "lễ tân"
+              ],
+              "related_faqs": [
+                "FAQ-003-S02-001",
+                "FAQ-003-S02-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S02-003",
+              "question": "Buddy là gì và tôi sẽ được hỗ trợ như thế nào?",
+              "answer": "Buddy là một nhân viên có kinh nghiệm trong công ty, được phân công để hỗ trợ bạn trong giai đoạn onboarding. Buddy sẽ giúp bạn: Trả lời các câu hỏi về quy trình, văn hóa công ty (không liên quan đến kỹ thuật chuyên môn), Giới thiệu bạn với đồng nghiệp trong và ngoài phòng ban, Check-in hàng tuần trong 4 tuần đầu. Buddy khác với quản lý trực tiếp của bạn – họ là người bạn đồng hành phi chính thức, giúp bạn cảm thấy thoải mái và hòa nhập nhanh hơn.",
+              "tags": [
+                "buddy",
+                "người hướng dẫn",
+                "onboarding support"
+              ],
+              "related_faqs": [
+                "FAQ-003-S02-002",
+                "FAQ-003-S02-004"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S02-004",
+              "question": "Thời gian thử việc kéo dài bao lâu và lương thử việc được tính như thế nào?",
+              "answer": "Thời gian thử việc phụ thuộc vào vị trí: vị trí yêu cầu bằng đại học trở lên là 60 ngày; trung cấp/cao đẳng là 30 ngày; lao động phổ thông là 6 ngày. Về lương thử việc, công ty trả 100% mức lương đã thỏa thuận trong hợp đồng thử việc (cao hơn mức tối thiểu 85% theo quy định pháp luật). Kết quả thử việc được đánh giá tại mốc 90 ngày.",
+              "tags": [
+                "thử việc",
+                "lương thử việc",
+                "probation"
+              ],
+              "related_faqs": [
+                "FAQ-003-S02-005"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S02-005",
+              "question": "Điều gì xảy ra nếu tôi không đạt thử việc?",
+              "answer": "Nếu kết quả đánh giá thử việc chưa đạt yêu cầu, có 3 khả năng: (1) Gia hạn thêm 30-60 ngày để có thêm thời gian chứng minh năng lực (trường hợp gần đạt); (2) Điều chỉnh vị trí công việc phù hợp hơn trong công ty (hiếm); (3) Kết thúc hợp đồng thử việc. Bạn sẽ được thông báo kết quả ít nhất 3 ngày làm việc trước khi hợp đồng thử việc kết thúc và được giải thích lý do rõ ràng.",
+              "tags": [
+                "không đạt thử việc",
+                "kết quả thử việc",
+                "gia hạn thử việc"
+              ],
+              "related_faqs": [
+                "FAQ-003-S02-004"
+              ]
+            }
+          ]
+        },
+        {
+          "section_id": "FAQ-003-S03",
+          "title": "FAQ - Lương, Thưởng & Phúc lợi",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S03-001",
+              "question": "Lương được trả vào ngày nào hàng tháng?",
+              "answer": "Lương được trả vào ngày [Ngày cụ thể] hàng tháng qua hình thức chuyển khoản ngân hàng. Nếu ngày trả lương rơi vào ngày nghỉ (cuối tuần hoặc lễ), lương sẽ được trả vào ngày làm việc trước đó. Phiếu lương điện tử (payslip) sẽ được gửi qua email nội bộ trước ngày trả lương 1-2 ngày.",
+              "tags": [
+                "ngày trả lương",
+                "lương",
+                "payslip"
+              ],
+              "related_faqs": [
+                "FAQ-003-S03-002",
+                "FAQ-003-S03-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S03-002",
+              "question": "Phiếu lương (payslip) bao gồm những khoản nào?",
+              "answer": "Phiếu lương bao gồm các khoản: THU NHẬP: Lương cơ bản, phụ cấp chức vụ, phụ cấp đi lại, phụ cấp ăn trưa, phụ cấp điện thoại, lương KPI (nếu có). KHẤU TRỪ: BHXH (8%), BHYT (1,5%), BHTN (1%), thuế TNCN (theo lũy tiến). THỰC LĨNH = Tổng thu nhập - Tổng khấu trừ. Nếu có thắc mắc về phiếu lương, liên hệ phòng C&B trong vòng 5 ngày kể từ ngày nhận payslip.",
+              "tags": [
+                "payslip",
+                "phiếu lương",
+                "các khoản khấu trừ",
+                "thuế TNCN",
+                "BHXH"
+              ],
+              "related_faqs": [
+                "FAQ-003-S03-001",
+                "FAQ-003-S03-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S03-003",
+              "question": "Thưởng tháng 13 được tính như thế nào?",
+              "answer": "Thưởng tháng 13 tương đương 1 tháng lương cơ bản và được trả trước Tết Nguyên Đán. Điều kiện: nhân viên phải làm việc đủ 12 tháng trong năm. Nếu chưa đủ 12 tháng, thưởng được tính theo tỷ lệ số tháng thực tế làm việc/12. Ví dụ: làm 6 tháng thì hưởng 50% thưởng tháng 13. Nhân viên trong thời gian thử việc không được tính thưởng tháng 13.",
+              "tags": [
+                "thưởng tháng 13",
+                "lương tháng 13",
+                "thưởng tết"
+              ],
+              "related_faqs": [
+                "FAQ-003-S03-001",
+                "FAQ-003-S04-001"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S03-004",
+              "question": "Công ty có hỗ trợ học phí cho các khóa học ngoài không?",
+              "answer": "Có, công ty có chính sách hỗ trợ học phí (Education Support). Điều kiện: (1) Khóa học phải liên quan đến công việc hiện tại hoặc định hướng phát triển trong công ty; (2) Nhân viên đã qua thử việc; (3) Được quản lý trực tiếp phê duyệt trước khi đăng ký. Mức hỗ trợ: 50-100% học phí, tối đa [Mức tối đa]/năm. Sau khi hoàn thành khóa học, nhân viên cần nộp chứng chỉ/xác nhận hoàn thành cho HR.",
+              "tags": [
+                "học phí",
+                "education support",
+                "đào tạo bên ngoài",
+                "phúc lợi"
+              ],
+              "related_faqs": [
+                "FAQ-003-S03-005"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S03-005",
+              "question": "Gói bảo hiểm sức khỏe cao cấp áp dụng cho những ai?",
+              "answer": "Gói bảo hiểm sức khỏe cao cấp áp dụng cho nhân viên chính thức đã làm việc đủ 1 năm. Sau 2 năm, bảo hiểm mở rộng thêm cho 1 người thân trực tiếp (vợ/chồng hoặc con). Gói bảo hiểm bao gồm: nội trú, ngoại trú, nha khoa, thai sản (cho nữ). Chi tiết quyền lợi và danh sách cơ sở y tế được chấp nhận có trong tài liệu 'Hướng dẫn Bảo hiểm Sức khỏe' trên cổng HR nội bộ.",
+              "tags": [
+                "bảo hiểm sức khỏe",
+                "healthcare insurance",
+                "người thân",
+                "phúc lợi cao cấp"
+              ],
+              "related_faqs": [
+                "FAQ-003-S03-004"
+              ]
+            }
+          ]
+        },
+        {
+          "section_id": "FAQ-003-S04",
+          "title": "FAQ - Nghỉ phép & Vắng mặt",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S04-001",
+              "question": "Tôi đăng ký nghỉ phép như thế nào?",
+              "answer": "Quy trình đăng ký nghỉ phép: (1) Đăng nhập vào hệ thống HR nội bộ (HRMS) tại [URL nội bộ]; (2) Chọn 'Đăng ký nghỉ phép', điền loại phép, ngày nghỉ, lý do; (3) Hệ thống tự động gửi yêu cầu đến quản lý trực tiếp để phê duyệt; (4) Bạn nhận email xác nhận sau khi được phê duyệt. Thời gian đăng ký trước: ít nhất 3 ngày làm việc (1-2 ngày phép) và ít nhất 1 tuần (3+ ngày phép). Trường hợp khẩn cấp: thông báo cho quản lý qua điện thoại/Zalo/Slack, và hoàn thiện hệ thống khi có thể.",
+              "tags": [
+                "đăng ký nghỉ phép",
+                "HRMS",
+                "quy trình xin phép",
+                "phê duyệt phép"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-002",
+                "FAQ-003-S04-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S04-002",
+              "question": "Ngày phép chưa dùng có được chuyển sang năm sau không?",
+              "answer": "Có, nhưng có giới hạn. Bạn có thể chuyển tối đa 5 ngày phép năm chưa sử dụng sang năm tiếp theo. Phần còn lại (nếu có) sẽ mất và không được quy đổi thành tiền. Thời hạn sử dụng phép chuyển tiếp: hết quý 1 của năm sau (31/03). Công ty sẽ nhắc nhở nhân viên về số ngày phép còn lại vào tháng 11 hàng năm để chủ động sắp xếp.",
+              "tags": [
+                "chuyển phép năm",
+                "rollover leave",
+                "phép năm",
+                "quy đổi phép"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-001",
+                "FAQ-003-S04-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S04-003",
+              "question": "Tôi có bao nhiêu ngày phép năm?",
+              "answer": "Số ngày phép năm phụ thuộc vào thâm niên làm việc tại công ty: Dưới 1 năm: 12 ngày (tính theo tỷ lệ tháng làm việc). 1 đến dưới 5 năm: 14 ngày. 5 đến dưới 10 năm: 16 ngày. Từ 10 năm trở lên: 18 ngày. Bạn có thể kiểm tra số ngày phép còn lại trên hệ thống HRMS hoặc hỏi trực tiếp HR.",
+              "tags": [
+                "số ngày phép",
+                "phép năm",
+                "thâm niên",
+                "annual leave"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-001",
+                "FAQ-003-S04-002"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S04-004",
+              "question": "Tôi được nghỉ mấy ngày khi kết hôn?",
+              "answer": "Nhân viên được nghỉ 3 ngày làm việc có hưởng lương khi kết hôn. Đây là phép đặc biệt, không trừ vào phép năm. Hồ sơ cần nộp: giấy đăng ký kết hôn hoặc giấy xác nhận kết hôn từ cơ quan có thẩm quyền, nộp cho HR trước hoặc trong vòng 1 tuần sau khi nghỉ. Ngoài ra, con ruột của bạn kết hôn: bạn được nghỉ 1 ngày có lương.",
+              "tags": [
+                "nghỉ cưới",
+                "kết hôn",
+                "phép đặc biệt",
+                "phép có lương"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-001",
+                "FAQ-003-S04-005"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S04-005",
+              "question": "Chính sách nghỉ ốm của công ty như thế nào?",
+              "answer": "Nghỉ ốm được hưởng theo quy định BHXH. Bạn cần thông báo cho quản lý và HR trước 8:00 sáng (hoặc sớm nhất có thể). Nghỉ ốm 2+ ngày liên tiếp: cần nộp giấy xác nhận của cơ sở y tế khi đi làm lại. Nghỉ ốm không có giấy tờ: được tối đa 2 ngày/năm (sẽ trừ vào phép năm). Nếu nghỉ vượt quá số ngày được BHXH hỗ trợ: phần vượt không có lương hoặc trừ phép năm.",
+              "tags": [
+                "nghỉ ốm",
+                "sick leave",
+                "BHXH",
+                "giấy tờ y tế"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-001",
+                "FAQ-003-S04-006"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S04-006",
+              "question": "Ngày sinh nhật tôi có được nghỉ không?",
+              "answer": "Có! Công ty có chính sách đặc biệt: nhân viên được nghỉ buổi chiều (4 tiếng) vào ngày sinh nhật của mình, hưởng lương và không cần đăng ký trước. Nếu ngày sinh nhật rơi vào ngày nghỉ (cuối tuần hoặc lễ), bạn có thể nghỉ bù vào ngày làm việc gần nhất trong vòng 1 tuần (trước hoặc sau). Vui lòng thông báo cho quản lý để sắp xếp công việc.",
+              "tags": [
+                "sinh nhật",
+                "birthday leave",
+                "phép sinh nhật",
+                "phúc lợi"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-004"
+              ]
+            }
+          ]
+        },
+        {
+          "section_id": "FAQ-003-S05",
+          "title": "FAQ - Làm việc & Quy định nội bộ",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S05-001",
+              "question": "Tôi có thể làm việc từ xa (WFH) không?",
+              "answer": "Nhân viên đã hoàn thành thời gian thử việc (ít nhất 2 tháng) được phép WFH tối đa 2 ngày/tuần, với điều kiện: có sự đồng ý của quản lý trực tiếp, công việc phù hợp với làm từ xa, và không trong tuần đầu tiên của tháng (tuần báo cáo). Khi WFH, bạn cần: online đúng giờ, phản hồi tin nhắn trong 15 phút, báo cáo tiến độ cuối ngày (trước 17:30), và tham dự đầy đủ các cuộc họp được lên lịch.",
+              "tags": [
+                "WFH",
+                "làm việc từ xa",
+                "remote work",
+                "hybrid"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-002"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S05-002",
+              "question": "Quy định về trang phục tại văn phòng như thế nào?",
+              "answer": "Công ty áp dụng chính sách trang phục linh hoạt theo ngày: Thứ Hai, Thứ Ba, Thứ Tư: Trang phục công sở trang trọng (Business Formal/Business Professional). Thứ Năm, Thứ Sáu: Smart Casual được chấp nhận. Trang phục không phù hợp bao gồm: quần shorts, flip-flops/dép lê, áo ba lỗ, quần/váy quá ngắn. Khi gặp gỡ khách hàng hoặc đối tác: luôn mặc trang phục trang trọng, bất kể ngày trong tuần.",
+              "tags": [
+                "trang phục",
+                "dress code",
+                "công sở",
+                "smart casual"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-001"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S05-003",
+              "question": "Tôi cần làm gì nếu bị ốm và không thể đi làm?",
+              "answer": "Nếu bạn bị ốm và không thể đến văn phòng: (1) Thông báo cho quản lý trực tiếp qua điện thoại, Zalo hoặc Slack trước 8:00 sáng hoặc sớm nhất có thể; (2) Thông báo đồng thời cho HR (nếu dự kiến nghỉ nhiều ngày); (3) Bàn giao công việc gấp nếu có deadline trong ngày (có thể qua email/chat); (4) Nếu nghỉ 2+ ngày, hãy nộp giấy xác nhận y tế khi đi làm lại; (5) Đăng ký nghỉ ốm trên hệ thống HRMS sau khi đi làm lại.",
+              "tags": [
+                "nghỉ ốm",
+                "thông báo nghỉ ốm",
+                "quy trình nghỉ ốm"
+              ],
+              "related_faqs": [
+                "FAQ-003-S04-005"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S05-004",
+              "question": "Làm thêm giờ có được trả thêm tiền không và quy trình là gì?",
+              "answer": "Có, làm thêm giờ được trả theo mức: ngày thường 150% lương giờ thực tế, ngày cuối tuần (Thứ 7, Chủ Nhật) 200%, ngày lễ/Tết 300%. Quy trình: (1) Bạn hoặc quản lý đề xuất làm thêm giờ; (2) Quản lý phê duyệt trước bằng văn bản (email); (3) Ghi lại số giờ làm thêm trên hệ thống; (4) HR/C&B tổng hợp và thanh toán vào cuối tháng. Bạn cũng có thể chọn bù giờ thay vì nhận tiền – phải thực hiện trong 30 ngày.",
+              "tags": [
+                "làm thêm giờ",
+                "overtime",
+                "phụ cấp OT",
+                "bù giờ"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-001"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S05-005",
+              "question": "Tôi quên chấm công thì phải làm gì?",
+              "answer": "Nếu quên chấm công (vào hoặc ra), bạn cần: (1) Báo cáo ngay trong ngày làm việc đó cho HR hoặc bộ phận C&B qua email hoặc hệ thống HRMS; (2) Nêu rõ lý do và thời gian vào/ra thực tế; (3) Nhờ quản lý trực tiếp xác nhận; (4) Nếu báo sau ngày làm việc đó, hệ thống sẽ không ghi nhận và có thể bị tính là vắng mặt không lý do. Tránh để xảy ra thường xuyên vì sẽ ảnh hưởng đến đánh giá kỷ luật.",
+              "tags": [
+                "quên chấm công",
+                "timekeeping",
+                "chấm công",
+                "vắng mặt"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S05-006",
+              "question": "Quy trình xử lý khi có khiếu nại hay mâu thuẫn nội bộ?",
+              "answer": "Khi gặp vấn đề hoặc mâu thuẫn tại nơi làm việc: Bước 1 – Giải quyết trực tiếp: Cố gắng giải quyết thẳng thắn với người liên quan (nếu an toàn). Bước 2 – Gặp quản lý: Nếu không giải quyết được, báo cáo với quản lý trực tiếp của bạn. Bước 3 – Liên hệ HR: Nếu vấn đề liên quan đến quản lý trực tiếp hoặc nghiêm trọng hơn, liên hệ HRBP hoặc HR Manager. Bước 4 – Đường dây nóng: Báo cáo ẩn danh qua [Số điện thoại/Email nội bộ]. Mọi khiếu nại được xử lý bảo mật và không có hành vi trả thù.",
+              "tags": [
+                "khiếu nại",
+                "mâu thuẫn nội bộ",
+                "grievance",
+                "giải quyết tranh chấp"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-007"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S05-007",
+              "question": "Làm thế nào để tôi xin tăng lương hoặc thăng chức?",
+              "answer": "Quy trình xem xét tăng lương và thăng chức: Tăng lương và thăng chức được xem xét chính thức trong kỳ đánh giá cuối năm (tháng 11-12). Để chuẩn bị tốt: (1) Đảm bảo KPI đạt mức 'Tốt' trở lên trong ít nhất 2 kỳ liên tiếp; (2) Thảo luận với quản lý về nguyện vọng và lộ trình phát triển trong các buổi 1-on-1; (3) Hoàn thành kế hoạch phát triển cá nhân (IDP) đã thống nhất; (4) Quản lý trực tiếp sẽ đề xuất lên HRBP/C&B để xem xét và phê duyệt. Ngoài kỳ đánh giá chính thức: tăng lương giữa năm có thể xem xét trong trường hợp đặc biệt (thay đổi phạm vi công việc, thăng chức đột xuất).",
+              "tags": [
+                "tăng lương",
+                "thăng chức",
+                "promotion",
+                "salary review",
+                "đánh giá"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-006"
+              ]
+            }
+          ]
+        },
+        {
+          "section_id": "FAQ-003-S06",
+          "title": "FAQ - Chính sách & Quyền lợi khác",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S06-001",
+              "question": "Chính sách giới thiệu ứng viên (Referral) hoạt động như thế nào?",
+              "answer": "Chương trình Referral cho phép nhân viên giới thiệu ứng viên cho các vị trí tuyển dụng đang mở. Quy trình: (1) Bạn gửi thông tin ứng viên cho HR, ghi rõ tên người giới thiệu; (2) Ứng viên trải qua quy trình tuyển dụng bình thường; (3) Nếu ứng viên được tuyển và hoàn thành thời gian thử việc thành công: bạn nhận thưởng Referral [Mức thưởng]. Lưu ý: không áp dụng nếu ứng viên đã tự nộp hồ sơ trước đó, và thưởng được trả sau khi ứng viên vượt qua thử việc.",
+              "tags": [
+                "referral",
+                "giới thiệu ứng viên",
+                "thưởng referral",
+                "employee referral"
+              ],
+              "related_faqs": [
+                "FAQ-003-S01-001"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S06-002",
+              "question": "Chương trình EAP (Employee Assistance Program) là gì?",
+              "answer": "EAP là chương trình hỗ trợ nhân viên về sức khỏe tâm thần và các vấn đề cá nhân. Công ty cung cấp miễn phí 4 buổi tư vấn tâm lý/năm với chuyên gia độc lập. Các vấn đề được hỗ trợ bao gồm: stress công việc, lo âu, trầm cảm, khó khăn trong các mối quan hệ, tài chính cá nhân, và các vấn đề gia đình. Thông tin hoàn toàn bảo mật, không ảnh hưởng đến đánh giá công việc. Liên hệ đặt lịch qua HR hoặc trực tiếp qua [Số điện thoại EAP nội bộ].",
+              "tags": [
+                "EAP",
+                "tư vấn tâm lý",
+                "sức khỏe tâm thần",
+                "phúc lợi nhân viên"
+              ],
+              "related_faqs": [
+                "FAQ-003-S06-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S06-003",
+              "question": "Quy trình nghỉ việc tự nguyện (resign) như thế nào?",
+              "answer": "Khi bạn quyết định nghỉ việc: (1) Nộp đơn xin nghỉ việc bằng văn bản (email hoặc form trên HRMS) cho quản lý trực tiếp và CC HR – báo trước ít nhất 30 ngày (nhân viên) hoặc 45 ngày (quản lý); (2) Thực hiện bàn giao công việc đầy đủ; (3) Hoàn trả tài sản công ty; (4) Tham gia Exit Interview với HR; (5) Nhận xác nhận bàn giao và quyết định thôi việc. Quyết toán lương (bao gồm phép chưa nghỉ nếu có) sẽ được thực hiện trong 7 ngày làm việc sau ngày nghỉ chính thức.",
+              "tags": [
+                "nghỉ việc",
+                "resign",
+                "offboarding",
+                "quyết toán lương",
+                "bàn giao"
+              ],
+              "related_faqs": [
+                "FAQ-003-S06-004"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S06-004",
+              "question": "Tôi có thể lấy lại xác nhận kinh nghiệm làm việc sau khi nghỉ việc không?",
+              "answer": "Có, công ty cung cấp các loại giấy tờ sau khi nhân viên nghỉ việc: (1) Giấy xác nhận kinh nghiệm làm việc (Employment Verification Letter) – xác nhận chức danh, thời gian làm việc; (2) Thư giới thiệu (Reference Letter) – theo yêu cầu và do quản lý trực tiếp ký. Quy trình: Gửi yêu cầu qua email cho HR với nội dung cụ thể cần xác nhận. Thời gian xử lý: 3-5 ngày làm việc. Đây là quyền lợi của nhân viên và không tốn phí.",
+              "tags": [
+                "xác nhận kinh nghiệm",
+                "employment verification",
+                "thư giới thiệu",
+                "reference letter"
+              ],
+              "related_faqs": [
+                "FAQ-003-S06-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S06-005",
+              "question": "Tôi liên hệ với ai khi có vấn đề về lương, phép hoặc các chính sách HR?",
+              "answer": "Tùy theo loại vấn đề, bạn có thể liên hệ: Về lương, phụ cấp, thuế, bảo hiểm: Phòng C&B (Compensation & Benefits) – email: cnb@company.com. Về phép năm, nghỉ ốm, WFH: HRBP phụ trách bộ phận của bạn – xem danh sách trên cổng HR nội bộ. Về tuyển dụng, referral: Talent Acquisition Team – email: ta@company.com. Về đào tạo, phát triển: L&D Team – email: lnd@company.com. Các vấn đề khác hoặc không biết liên hệ ai: hr@company.com – đội HR sẽ hướng dẫn đến đúng người.",
+              "tags": [
+                "liên hệ HR",
+                "C&B",
+                "HRBP",
+                "đầu mối liên hệ",
+                "phòng nhân sự"
+              ],
+              "related_faqs": [
+                "FAQ-003-S05-006"
+              ]
+            }
+          ]
+        },
+        {
+          "section_id": "FAQ-003-S07",
+          "title": "FAQ - Đánh giá hiệu suất & Khen thưởng",
+          "faqs": [
+            {
+              "faq_id": "FAQ-003-S07-001",
+              "question": "Đánh giá hiệu suất được thực hiện bao nhiêu lần trong năm và vào thời điểm nào?",
+              "answer": "Công ty thực hiện đánh giá hiệu suất chính thức 2 lần/năm: (1) Đánh giá giữa năm (Mid-year Review) vào tháng 6 hoặc tháng 7 – kiểm tra tiến độ mục tiêu và cập nhật kế hoạch phát triển cá nhân (IDP). (2) Đánh giá cuối năm (Annual Review) vào tháng 11 hoặc tháng 12 – đánh giá toàn diện, xếp loại chính thức, quyết định thưởng KPI và tăng lương năm sau. Ngoài ra, quản lý và nhân viên tổ chức họp 1-on-1 định kỳ (ít nhất 2 tuần/lần) để theo dõi tiến độ và trao đổi phản hồi liên tục.",
+              "tags": [
+                "chu kỳ đánh giá",
+                "mid-year review",
+                "annual review",
+                "1-on-1",
+                "hiệu suất"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-002",
+                "FAQ-003-S07-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-002",
+              "question": "Hiệu suất của tôi được đánh giá dựa trên những tiêu chí nào?",
+              "answer": "Hiệu suất được đánh giá theo 2 chiều: (1) KPI/Kết quả công việc (chiếm 60-70% điểm): bao gồm 3-7 mục tiêu SMART được thống nhất với quản lý đầu năm/đầu kỳ. Đánh giá theo % hoàn thành. KPI bộ phận đóng góp 20-30% điểm KPI cá nhân. (2) Năng lực và hành vi (chiếm 30-40% điểm): tinh thần hợp tác, tư duy chủ động, giao tiếp, cam kết giá trị cốt lõi, khả năng học hỏi – đánh giá qua feedback 360 độ và tự đánh giá.",
+              "tags": [
+                "tiêu chí đánh giá",
+                "KPI",
+                "năng lực hành vi",
+                "360 độ",
+                "mục tiêu SMART"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-001",
+                "FAQ-003-S07-003"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-003",
+              "question": "Thang xếp loại hiệu suất có bao nhiêu bậc và ý nghĩa của mỗi bậc là gì?",
+              "answer": "Công ty sử dụng thang 5 bậc: Bậc 5 – Xuất sắc (Outstanding): vượt xa kỳ vọng, tỷ lệ không quá 10% bộ phận. Bậc 4 – Tốt (Exceeds Expectations): vượt mức hầu hết mục tiêu, khoảng 20-25%. Bậc 3 – Đạt yêu cầu (Meets Expectations): hoàn thành đầy đủ, đúng hạn, khoảng 50-60%. Bậc 2 – Cần cải thiện (Below Expectations): chưa đạt một số mục tiêu quan trọng, cần kế hoạch PIP. Bậc 1 – Không đạt (Unsatisfactory): không hoàn thành phần lớn mục tiêu, rủi ro hợp đồng. Phân phối xếp loại được calibration giữa các quản lý để đảm bảo công bằng.",
+              "tags": [
+                "thang điểm",
+                "xếp loại",
+                "outstanding",
+                "meets expectations",
+                "PIP",
+                "calibration"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-002",
+                "FAQ-003-S07-004"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-004",
+              "question": "Thưởng KPI được tính như thế nào và khi nào tôi nhận được?",
+              "answer": "Thưởng KPI (Performance Bonus) được tính theo công thức: Target Bonus × Hệ số hiệu suất cá nhân × Hệ số kết quả công ty. Target Bonus theo cấp bậc: nhân viên 10-15%, team lead 15-20%, manager 20-30%, director 30-50% lương cơ bản năm. Hệ số cá nhân: Bậc 5 = 150%, Bậc 4 = 120%, Bậc 3 = 100%, Bậc 2 = 50%, Bậc 1 = 0%. Hệ số kết quả công ty từ 0-120% tùy mức đạt target. Thưởng được chi trả vào Quý 1 năm sau (tháng 2-3), điều kiện: đang là nhân viên chính thức và đã làm đủ 3 tháng trong năm.",
+              "tags": [
+                "thưởng KPI",
+                "performance bonus",
+                "công thức tính thưởng",
+                "hệ số hiệu suất",
+                "thời điểm nhận thưởng"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-003",
+                "FAQ-003-S07-005"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-005",
+              "question": "Mức tăng lương hàng năm được tính như thế nào?",
+              "answer": "Tăng lương theo hiệu suất (Merit Increase) được thực hiện 1 lần/năm sau kỳ đánh giá cuối năm, áp dụng từ tháng 1 hoặc tháng 2 năm sau. Khung tăng lương theo xếp loại: Bậc 5 (Xuất sắc) 10-15%, Bậc 4 (Tốt) 7-10%, Bậc 3 (Đạt yêu cầu) 4-6%, Bậc 2 (Cần cải thiện) 0-2%, Bậc 1 (Không đạt) 0%. Mức tăng thực tế còn phụ thuộc vào vị trí trong dải lương (compa-ratio) và ngân sách tăng lương của công ty. Nhân viên vừa thăng chức được xem xét riêng.",
+              "tags": [
+                "tăng lương",
+                "merit increase",
+                "salary review",
+                "khung tăng lương",
+                "compa-ratio"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-004",
+                "FAQ-003-S05-007"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-006",
+              "question": "Chương trình nhân viên xuất sắc tháng/quý/năm có những quyền lợi gì?",
+              "answer": "Công ty có 3 cấp độ vinh danh định kỳ: (1) Nhân viên xuất sắc tháng (theo phòng ban): bằng khen điện tử, vinh danh trên kênh nội bộ, phiếu quà tặng. (2) Nhân viên xuất sắc quý: thưởng tiền mặt, ưu tiên xét học bổng đào tạo. (3) Nhân viên xuất sắc năm: vinh danh tại Gala cuối năm, nhận cúp + bằng khen + thưởng tiền lớn + voucher du lịch, được ghi vào hồ sơ nhân sự và ưu tiên xét thăng chức. Ngoài ra còn có giải thưởng chuyên đề: Innovation Award, Teamwork Award, Customer Champion, Rising Star.",
+              "tags": [
+                "nhân viên xuất sắc",
+                "employee of the month",
+                "employee of the year",
+                "quyền lợi vinh danh",
+                "gala"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-007",
+                "FAQ-003-S07-004"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-007",
+              "question": "Chương trình Kudos (ghi nhận đồng nghiệp) hoạt động như thế nào?",
+              "answer": "Kudos là chương trình ghi nhận đồng nghiệp theo chiều ngang. Mỗi nhân viên nhận một số Kudos points hàng tháng để trao tặng cho đồng nghiệp qua hệ thống HRMS hoặc Slack #recognition, kèm lý do cụ thể và gắn với giá trị cốt lõi công ty. Điểm Kudos tích lũy có thể đổi thành phần thưởng (quà, voucher, thêm ngày phép). Bảng xếp hạng Kudos được công bố hàng tháng. Lưu ý: không trao Kudos cho bản thân, lý do phải cụ thể và thực tế.",
+              "tags": [
+                "kudos",
+                "peer recognition",
+                "ghi nhận đồng nghiệp",
+                "điểm kudos",
+                "đổi phần thưởng"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-006"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-008",
+              "question": "PIP (Performance Improvement Plan) là gì và khi nào tôi bị đưa vào PIP?",
+              "answer": "PIP (Kế hoạch Cải thiện Hiệu suất) được áp dụng khi nhân viên xếp loại Bậc 2 (Cần cải thiện) hoặc hiệu suất suy giảm đột ngột. Quy trình: HR và quản lý gặp nhân viên → lập kế hoạch với mục tiêu cụ thể trong 30-60-90 ngày + hỗ trợ đào tạo/coaching + lịch check-in hàng tuần → nhân viên ký xác nhận → theo dõi tiến độ. Nếu đạt mục tiêu PIP: được ghi nhận cải thiện, tiếp tục theo dõi thêm 1 quý. Nếu không đạt: tiến hành các bước kỷ luật cao hơn, có thể dẫn đến chấm dứt hợp đồng. PIP không phải hình phạt mà là cơ hội hỗ trợ nhân viên cải thiện.",
+              "tags": [
+                "PIP",
+                "performance improvement plan",
+                "cải thiện hiệu suất",
+                "bậc 2",
+                "coaching"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-003",
+                "FAQ-003-S05-007"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-009",
+              "question": "Feedback 360 độ là gì và ai sẽ đánh giá tôi?",
+              "answer": "Feedback 360 độ là quy trình thu thập ý kiến về một nhân viên từ nhiều phía khác nhau, không chỉ từ quản lý. Người đánh giá gồm: (1) Bản thân nhân viên (tự đánh giá). (2) Quản lý trực tiếp. (3) 3-5 đồng nghiệp cùng phối hợp công việc (do nhân viên đề xuất, quản lý xác nhận). (4) Cấp dưới (nếu có). Phản hồi từ đồng nghiệp được ẩn danh hóa để đảm bảo tính khách quan. Kết quả 360 độ đóng góp 30-40% vào điểm đánh giá năng lực hành vi. Quá trình diễn ra trong tuần 2-3 tháng 11.",
+              "tags": [
+                "360 độ",
+                "feedback 360",
+                "tự đánh giá",
+                "đồng nghiệp đánh giá",
+                "ẩn danh"
+              ],
+              "related_faqs": [
+                "FAQ-003-S07-002",
+                "FAQ-003-S07-001"
+              ]
+            },
+            {
+              "faq_id": "FAQ-003-S07-010",
+              "question": "Phúc lợi linh hoạt (Flexible Benefits) là gì và tôi có thể dùng cho những gì?",
+              "answer": "Chương trình phúc lợi linh hoạt cung cấp cho mỗi nhân viên chính thức một ngân sách hàng năm để tự chọn phúc lợi phù hợp nhu cầu. Các danh mục được chấp nhận: Sức khỏe (nâng cấp bảo hiểm, gym, spa, khám bổ sung); Học tập (khóa online, sách, hội thảo, chứng chỉ); Gia đình (giữ trẻ, học phí con, chăm sóc người thân); Tiện ích WFH (internet, thiết bị văn phòng tại nhà); Du lịch. Đăng ký trên HR portal, nộp hóa đơn để hoàn tiền trong 10 ngày làm việc. Ngân sách hết hạn ngày 15/12 hàng năm, không được chuyển tiếp.",
+              "tags": [
+                "flexible benefits",
+                "phúc lợi linh hoạt",
+                "ngân sách phúc lợi",
+                "wellness",
+                "học tập",
+                "gia đình"
+              ],
+              "related_faqs": [
+                "FAQ-003-S03-004",
+                "FAQ-003-S03-005"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "doc_id": "PE-004",
+      "title": "Hệ thống Đánh giá Hiệu suất & Khen thưởng Nhân viên",
+      "category": "performance_and_rewards",
+      "language": "vi",
+      "sections": [
+        {
+          "section_id": "PE-004-S01",
+          "title": "Hệ thống đánh giá hiệu suất (Performance Management System)",
+          "subsections": [
+            {
+              "subsection_id": "PE-004-S01-01",
+              "title": "Triết lý và mục tiêu của hệ thống đánh giá",
+              "content": "Công ty áp dụng triết lý đánh giá hiệu suất theo hướng 'Phát triển liên tục' (Continuous Development), không chỉ dừng lại ở việc xếp loại, mà còn hướng tới:\n1. Ghi nhận đúng và công bằng những đóng góp của từng nhân viên.\n2. Xác định rõ điểm mạnh, điểm cần cải thiện để có kế hoạch phát triển cụ thể.\n3. Kết nối mục tiêu cá nhân với mục tiêu chiến lược của tổ chức (OKR/KPI alignment).\n4. Tạo động lực và cam kết gắn bó lâu dài cho nhân viên.\n5. Làm cơ sở cho các quyết định tăng lương, thăng chức, khen thưởng và đào tạo.\nHệ thống đánh giá được thiết kế minh bạch, nhất quán và có thể đo lường được.",
+              "tags": [
+                "đánh giá hiệu suất",
+                "performance management",
+                "OKR",
+                "KPI",
+                "phát triển nhân viên"
+              ],
+              "chunk_text": "Triết lý đánh giá hiệu suất: ghi nhận đóng góp, xác định điểm mạnh/yếu, kết nối mục tiêu cá nhân với chiến lược tổ chức, tạo động lực và làm cơ sở cho tăng lương/thăng chức/khen thưởng. Hệ thống minh bạch và đo lường được."
+            },
+            {
+              "subsection_id": "PE-004-S01-02",
+              "title": "Chu kỳ và lịch đánh giá hiệu suất",
+              "content": "Chu kỳ đánh giá hiệu suất được thực hiện ở 3 cấp độ:\n\n1. Đánh giá hàng tháng (Monthly Check-in):\n   - Quản lý và nhân viên thực hiện cuộc họp 1-on-1 ngắn (15-30 phút).\n   - Mục tiêu: rà soát tiến độ KPI tháng, tháo gỡ vướng mắc, điều chỉnh ưu tiên.\n   - Không bắt buộc ghi chép vào hệ thống, nhưng được khuyến khích.\n\n2. Đánh giá giữa năm (Mid-year Review – tháng 6 hoặc 7):\n   - Đánh giá 50% tiến độ mục tiêu năm.\n   - Điều chỉnh KPI nếu có thay đổi chiến lược hoặc bối cảnh kinh doanh.\n   - Cập nhật Individual Development Plan (IDP).\n   - Kết quả không ảnh hưởng trực tiếp đến thưởng, nhưng là cơ sở để xem xét tăng lương giữa năm (nếu có).\n\n3. Đánh giá cuối năm (Annual Review – tháng 11 hoặc 12):\n   - Đánh giá toàn diện 100% mục tiêu và hành vi trong năm.\n   - Xếp loại hiệu suất chính thức.\n   - Cơ sở quyết định thưởng KPI, tăng lương, thăng chức năm sau.\n   - Thảo luận và đặt mục tiêu cho năm tiếp theo.",
+              "tags": [
+                "chu kỳ đánh giá",
+                "mid-year review",
+                "annual review",
+                "1-on-1",
+                "IDP",
+                "KPI tháng"
+              ],
+              "chunk_text": "3 cấp độ đánh giá: (1) Monthly Check-in: họp 1-on-1 15-30 phút/tháng rà soát KPI. (2) Mid-year Review (tháng 6-7): đánh giá 50% tiến độ, điều chỉnh KPI, cập nhật IDP. (3) Annual Review (tháng 11-12): đánh giá toàn diện, xếp loại chính thức, quyết định thưởng/tăng lương/thăng chức."
+            },
+            {
+              "subsection_id": "PE-004-S01-03",
+              "title": "Thang điểm và xếp loại hiệu suất",
+              "content": "Công ty sử dụng thang điểm 5 bậc để xếp loại hiệu suất:\n\n- Bậc 5 – Xuất sắc (Outstanding): Vượt xa kỳ vọng ở tất cả các mục tiêu và hành vi. Là tấm gương cho cả nhóm. Tỷ lệ xếp loại này không quá 10% trong toàn bộ phận.\n\n- Bậc 4 – Tốt (Exceeds Expectations): Hoàn thành vượt mức hầu hết các mục tiêu. Thể hiện năng lực cao hơn yêu cầu vị trí. Tỷ lệ khoảng 20-25%.\n\n- Bậc 3 – Đạt yêu cầu (Meets Expectations): Hoàn thành đầy đủ và đúng hạn các mục tiêu đề ra. Hiệu suất phù hợp với yêu cầu vị trí. Tỷ lệ khoảng 50-60%.\n\n- Bậc 2 – Cần cải thiện (Below Expectations): Chưa hoàn thành một số mục tiêu quan trọng. Cần kế hoạch cải thiện hiệu suất (PIP – Performance Improvement Plan).\n\n- Bậc 1 – Không đạt (Unsatisfactory): Không hoàn thành phần lớn mục tiêu. Rủi ro cao về việc tiếp tục hợp đồng lao động.\n\nLưu ý: Phân phối xếp loại (calibration) được thực hiện cấp phòng ban để đảm bảo tính công bằng và nhất quán toàn công ty.",
+              "tags": [
+                "thang điểm đánh giá",
+                "xếp loại hiệu suất",
+                "outstanding",
+                "PIP",
+                "calibration",
+                "5 bậc"
+              ],
+              "chunk_text": "Thang 5 bậc: Bậc 5 – Xuất sắc (<10%), Bậc 4 – Tốt (20-25%), Bậc 3 – Đạt yêu cầu (50-60%), Bậc 2 – Cần cải thiện (cần PIP), Bậc 1 – Không đạt (rủi ro hợp đồng). Có calibration theo phòng ban để đảm bảo công bằng."
+            },
+            {
+              "subsection_id": "PE-004-S01-04",
+              "title": "Tiêu chí đánh giá – KPI (What) và Năng lực hành vi (How)",
+              "content": "Hiệu suất nhân viên được đánh giá theo 2 chiều:\n\nChiều 1 – KPI / Kết quả công việc (What – chiếm 60-70% điểm tổng):\n- Các mục tiêu đặt ra đầu năm hoặc đầu kỳ, theo nguyên tắc SMART.\n- Mỗi nhân viên có 3-7 KPI chính, được thống nhất giữa nhân viên và quản lý.\n- Đánh giá mức độ hoàn thành theo % (Ví dụ: đạt 80% KPI = điểm 3/5 theo bảng quy đổi).\n- KPI bộ phận đóng góp 20-30% vào điểm KPI cá nhân (khuyến khích tinh thần đồng đội).\n\nChiều 2 – Năng lực và hành vi (How – chiếm 30-40% điểm tổng):\n- Đánh giá cách nhân viên hoàn thành công việc, bao gồm:\n  + Tinh thần hợp tác và làm việc nhóm.\n  + Tư duy chủ động, sáng tạo, giải quyết vấn đề.\n  + Khả năng giao tiếp và ảnh hưởng.\n  + Cam kết với giá trị cốt lõi của công ty.\n  + Khả năng học hỏi và thích nghi.\n- Đánh giá dựa trên ý kiến 360 độ (quản lý, đồng nghiệp, cấp dưới nếu có) và tự đánh giá.",
+              "tags": [
+                "KPI",
+                "năng lực hành vi",
+                "SMART",
+                "360 độ",
+                "tiêu chí đánh giá",
+                "kết quả công việc"
+              ],
+              "chunk_text": "Đánh giá 2 chiều: KPI/Kết quả (60-70% điểm) – 3-7 mục tiêu SMART, đánh giá theo % hoàn thành, có KPI bộ phận (20-30%); và Năng lực hành vi (30-40% điểm) – hợp tác, sáng tạo, giao tiếp, giá trị cốt lõi, học hỏi – đánh giá qua 360 độ và tự đánh giá."
+            },
+            {
+              "subsection_id": "PE-004-S01-05",
+              "title": "Quy trình đánh giá cuối năm chi tiết",
+              "content": "Các bước thực hiện đánh giá cuối năm:\n\nBước 1 – Chuẩn bị (tuần 1-2 tháng 11):\n- HR gửi hướng dẫn, biểu mẫu và timeline đánh giá toàn công ty.\n- Nhân viên hoàn thiện bản tự đánh giá (Self-Assessment) trên hệ thống HRMS.\n\nBước 2 – Thu thập feedback 360 độ (tuần 2-3 tháng 11):\n- Hệ thống tự động gửi form đánh giá đến 3-5 người phối hợp công việc của nhân viên (do nhân viên đề xuất và quản lý xác nhận).\n- Phản hồi được ẩn danh hóa để đảm bảo tính khách quan.\n\nBước 3 – Quản lý đánh giá (tuần 3-4 tháng 11):\n- Quản lý trực tiếp hoàn thành form đánh giá nhân viên dựa trên KPI, hành vi và feedback 360 độ.\n- Đề xuất mức xếp loại sơ bộ.\n\nBước 4 – Calibration session (đầu tháng 12):\n- Các quản lý trong cùng phòng ban/cấp thảo luận và thống nhất phân phối xếp loại.\n- HR/HRBP điều phối để đảm bảo công bằng.\n\nBước 5 – Buổi đánh giá 1-on-1 (giữa tháng 12):\n- Quản lý gặp từng nhân viên để thông báo và thảo luận kết quả.\n- Thống nhất mục tiêu và kế hoạch phát triển năm sau.\n\nBước 6 – Phê duyệt và lưu hồ sơ (cuối tháng 12):\n- Nhân viên ký xác nhận kết quả đánh giá trên hệ thống.\n- HR lưu trữ và xử lý các quyết định liên quan (thưởng, tăng lương, thăng chức).",
+              "tags": [
+                "quy trình đánh giá",
+                "self-assessment",
+                "360 độ",
+                "calibration",
+                "HRMS",
+                "annual review"
+              ],
+              "chunk_text": "6 bước đánh giá cuối năm: (1) Chuẩn bị & tự đánh giá (tuần 1-2/11). (2) Thu thập feedback 360 độ ẩn danh (tuần 2-3/11). (3) Quản lý đánh giá và đề xuất xếp loại (tuần 3-4/11). (4) Calibration session giữa các quản lý (đầu 12). (5) Buổi 1-on-1 thông báo kết quả (giữa 12). (6) Phê duyệt & lưu hồ sơ (cuối 12)."
+            },
+            {
+              "subsection_id": "PE-004-S01-06",
+              "title": "Kế hoạch cải thiện hiệu suất (PIP – Performance Improvement Plan)",
+              "content": "PIP được áp dụng khi nhân viên xếp loại Bậc 2 (Cần cải thiện) hoặc trong trường hợp hiệu suất suy giảm đột ngột.\n\nQuy trình thiết lập PIP:\n1. HR và quản lý gặp nhân viên để thảo luận vấn đề hiệu suất một cách thẳng thắn và tôn trọng.\n2. Xây dựng PIP document bao gồm:\n   - Mô tả cụ thể vấn đề hiệu suất (dẫn chứng, số liệu).\n   - Mục tiêu cải thiện rõ ràng, đo lường được trong thời gian 30-60-90 ngày.\n   - Hỗ trợ từ công ty: đào tạo, coaching, tài nguyên bổ sung.\n   - Lịch check-in định kỳ (thường là hàng tuần).\n   - Hệ quả nếu không đạt mục tiêu cải thiện.\n3. Nhân viên ký xác nhận PIP.\n4. Theo dõi tiến độ và ghi chép đầy đủ.\n\nKết quả PIP:\n- Đạt: Nhân viên được ghi nhận cải thiện, tiếp tục theo dõi thêm 1 quý.\n- Không đạt: Tiến hành các bước kỷ luật cao hơn, có thể dẫn đến chấm dứt hợp đồng.",
+              "tags": [
+                "PIP",
+                "performance improvement plan",
+                "cải thiện hiệu suất",
+                "kỷ luật",
+                "coaching"
+              ],
+              "chunk_text": "PIP áp dụng cho nhân viên xếp Bậc 2 (Cần cải thiện). Quy trình: gặp gỡ thảo luận → lập PIP với mục tiêu 30-60-90 ngày + hỗ trợ + lịch check-in + hệ quả → nhân viên ký → theo dõi. Kết quả đạt: tiếp tục theo dõi 1 quý. Không đạt: kỷ luật cao hơn hoặc chấm dứt hợp đồng."
+            }
+          ]
+        },
+        {
+          "section_id": "PE-004-S02",
+          "title": "Hệ thống Khen thưởng & Ghi nhận (Rewards & Recognition)",
+          "subsections": [
+            {
+              "subsection_id": "PE-004-S02-01",
+              "title": "Triết lý khen thưởng và ghi nhận",
+              "content": "Công ty tin rằng việc ghi nhận và khen thưởng kịp thời, công bằng là chìa khóa để duy trì động lực và văn hóa hiệu suất cao. Hệ thống khen thưởng được xây dựng dựa trên nguyên tắc:\n1. Công bằng và minh bạch: Tiêu chí khen thưởng rõ ràng, ai cũng có thể đạt được.\n2. Kịp thời: Ghi nhận sát với thời điểm có thành tích, không để lâu.\n3. Đa dạng hình thức: Kết hợp khen thưởng bằng tiền (monetary) và phi tiền tệ (non-monetary).\n4. Cá nhân hóa: Tùy chỉnh hình thức ghi nhận phù hợp với sở thích và văn hóa của từng nhân viên.\n5. Lan tỏa văn hóa: Khen thưởng không chỉ cho kết quả mà còn cho hành vi phù hợp giá trị công ty.",
+              "tags": [
+                "khen thưởng",
+                "ghi nhận",
+                "rewards",
+                "recognition",
+                "động lực",
+                "văn hóa hiệu suất"
+              ],
+              "chunk_text": "Triết lý khen thưởng: công bằng & minh bạch, kịp thời, đa dạng hình thức (tiền và phi tiền tệ), cá nhân hóa, lan tỏa văn hóa. Ghi nhận không chỉ kết quả mà còn hành vi phù hợp giá trị công ty."
+            },
+            {
+              "subsection_id": "PE-004-S02-02",
+              "title": "Thưởng KPI (Performance Bonus)",
+              "content": "Thưởng KPI là khoản thưởng biến đổi (variable pay) dựa trên kết quả đánh giá hiệu suất.\n\nCơ chế tính thưởng KPI:\n- Mỗi vị trí có một hệ số thưởng KPI mục tiêu (Target Bonus) tính theo % lương cơ bản hàng năm.\n  + Nhân viên (Individual Contributor): 10-15% lương năm.\n  + Chuyên viên cao cấp / Team Lead: 15-20% lương năm.\n  + Quản lý (Manager, Sr. Manager): 20-30% lương năm.\n  + Giám đốc (Director, VP): 30-50% lương năm.\n\n- Mức thưởng thực tế = Target Bonus × Hệ số hiệu suất cá nhân × Hệ số kết quả công ty.\n\nHệ số hiệu suất cá nhân theo xếp loại:\n  + Bậc 5 – Xuất sắc: 150%\n  + Bậc 4 – Tốt: 120%\n  + Bậc 3 – Đạt yêu cầu: 100%\n  + Bậc 2 – Cần cải thiện: 50%\n  + Bậc 1 – Không đạt: 0%\n\nHệ số kết quả công ty (Company Performance Multiplier):\n  + Công ty đạt >120% target: 120%\n  + Công ty đạt 100-120% target: 100%\n  + Công ty đạt 80-99% target: 80%\n  + Công ty đạt <80% target: 0-50% (do HĐQT quyết định)\n\nThời điểm chi trả: Quý 1 năm sau (tháng 2-3), sau khi kết quả đánh giá được phê duyệt.\nĐiều kiện nhận thưởng: Đang là nhân viên chính thức tại thời điểm chi trả và đã làm đủ 3 tháng trong năm tài chính.",
+              "tags": [
+                "thưởng KPI",
+                "performance bonus",
+                "variable pay",
+                "hệ số thưởng",
+                "kết quả công ty"
+              ],
+              "chunk_text": "Thưởng KPI theo công thức: Target Bonus × Hệ số hiệu suất cá nhân × Hệ số kết quả công ty. Target Bonus: nhân viên 10-15%, team lead 15-20%, manager 20-30%, director 30-50% lương năm. Hệ số cá nhân: Xuất sắc 150%, Tốt 120%, Đạt 100%, Cần cải thiện 50%, Không đạt 0%. Chi trả Q1 năm sau."
+            },
+            {
+              "subsection_id": "PE-004-S02-03",
+              "title": "Thưởng nhân viên xuất sắc (Employee Recognition Awards)",
+              "content": "Chương trình vinh danh nhân viên xuất sắc được tổ chức định kỳ:\n\n1. Nhân viên xuất sắc tháng (Employee of the Month):\n   - Mỗi phòng ban bình chọn 1 nhân viên xuất sắc/tháng.\n   - Tiêu chí: hoàn thành vượt mức KPI, tinh thần hỗ trợ đồng nghiệp, thể hiện giá trị cốt lõi.\n   - Quyền lợi: Bằng khen điện tử, đăng tải vinh danh trên kênh nội bộ (Slack, intranet), phiếu quà tặng [Mức phiếu quà].\n\n2. Nhân viên xuất sắc quý (Employee of the Quarter):\n   - Chọn từ các Nhân viên xuất sắc tháng trong quý.\n   - Quyền lợi: Bằng khen, thưởng tiền mặt [Mức thưởng quý], được ưu tiên xét học bổng đào tạo.\n\n3. Nhân viên xuất sắc năm (Employee of the Year):\n   - Vinh danh tại sự kiện Gala cuối năm của công ty.\n   - Quyền lợi: Cúp, bằng khen, thưởng tiền mặt [Mức thưởng năm], chuyến du lịch hoặc voucher có giá trị, được ghi vào hồ sơ nhân sự và ưu tiên thăng chức.\n\n4. Giải thưởng theo chủ đề:\n   - Innovation Award: Cho sáng kiến/ý tưởng tạo ra giá trị rõ ràng.\n   - Teamwork Award: Cho cá nhân/nhóm thể hiện tinh thần hợp tác xuất sắc.\n   - Customer Champion: Cho nhân viên có phản hồi xuất sắc từ khách hàng.\n   - Rising Star: Dành cho nhân viên mới (dưới 2 năm) có tiến bộ vượt bậc.",
+              "tags": [
+                "nhân viên xuất sắc",
+                "employee of the month",
+                "employee of the year",
+                "vinh danh",
+                "gala",
+                "giải thưởng"
+              ],
+              "chunk_text": "4 cấp độ vinh danh: (1) Xuất sắc tháng – bằng khen + phiếu quà/phòng ban. (2) Xuất sắc quý – thưởng tiền mặt + ưu tiên học bổng. (3) Xuất sắc năm – tại Gala cuối năm, cúp + thưởng lớn + du lịch + ưu tiên thăng chức. (4) Giải theo chủ đề: Innovation, Teamwork, Customer Champion, Rising Star."
+            },
+            {
+              "subsection_id": "PE-004-S02-04",
+              "title": "Khen thưởng ghi nhận đồng nghiệp (Peer-to-Peer Recognition)",
+              "content": "Công ty xây dựng văn hóa ghi nhận không chỉ từ trên xuống (top-down) mà còn giữa các đồng nghiệp:\n\nChương trình 'Kudos' (Ghi nhận đồng nghiệp):\n- Mỗi nhân viên được cấp [X] 'Kudos points' mỗi tháng để trao tặng cho đồng nghiệp.\n- Trao Kudos qua hệ thống HRMS hoặc kênh Slack #recognition, kèm lý do cụ thể.\n- Kudos gắn với một trong các giá trị cốt lõi của công ty.\n- Điểm Kudos tích lũy có thể đổi thành phần thưởng (quà, voucher, thêm ngày phép, v.v.).\n\nQuy tắc sử dụng Kudos:\n- Không trao Kudos cho bản thân.\n- Lý do Kudos phải cụ thể và liên quan đến hành vi/kết quả thực tế.\n- Quản lý không được trao Kudos có điều kiện (ví dụ: 'Trao Kudos nếu bạn làm thêm giờ').\n\nBảng xếp hạng Kudos (Leaderboard) được công bố định kỳ hàng tháng trên cổng nội bộ.",
+              "tags": [
+                "kudos",
+                "peer recognition",
+                "ghi nhận đồng nghiệp",
+                "điểm thưởng",
+                "văn hóa ghi nhận"
+              ],
+              "chunk_text": "Chương trình Kudos: mỗi nhân viên có [X] kudos points/tháng để trao cho đồng nghiệp qua HRMS hoặc Slack #recognition, gắn với giá trị cốt lõi. Điểm tích lũy đổi phần thưởng (quà, voucher, ngày phép). Leaderboard công bố hàng tháng."
+            },
+            {
+              "subsection_id": "PE-004-S02-05",
+              "title": "Thưởng dự án và thưởng đột xuất (Spot Bonus)",
+              "content": "Ngoài các chu kỳ thưởng định kỳ, công ty áp dụng thưởng linh hoạt:\n\n1. Thưởng dự án (Project Bonus):\n   - Áp dụng cho cá nhân hoặc nhóm hoàn thành dự án chiến lược xuất sắc (vượt deadline, vượt target, tiết kiệm chi phí đáng kể).\n   - Mức thưởng: tùy quy mô và tầm quan trọng của dự án, do Ban Giám đốc phê duyệt.\n   - Quy trình: Quản lý đề xuất → HRBP xem xét → Giám đốc/CHRO phê duyệt → C&B xử lý thanh toán.\n\n2. Spot Bonus (Thưởng nóng):\n   - Quản lý có thể trao Spot Bonus ngay lập tức khi nhân viên có hành động/kết quả đặc biệt xuất sắc.\n   - Hạn mức: quản lý cấp trung tối đa [Mức 1]/lần; giám đốc tối đa [Mức 2]/lần.\n   - Không giới hạn số lần trong năm nhưng cần ghi chép lý do rõ ràng trên hệ thống.\n   - Spot Bonus không phải là quyền lợi cố định và không được dùng thay thế cho tăng lương.\n\n3. Thưởng sáng kiến (Innovation Bonus):\n   - Nhân viên đề xuất sáng kiến được công ty triển khai và mang lại giá trị đo lường được.\n   - Mức thưởng: [% giá trị tiết kiệm/tăng doanh thu] hoặc mức cố định, tùy quyết định của ban lãnh đạo.",
+              "tags": [
+                "thưởng dự án",
+                "spot bonus",
+                "thưởng nóng",
+                "innovation bonus",
+                "thưởng đột xuất"
+              ],
+              "chunk_text": "3 loại thưởng linh hoạt: (1) Thưởng dự án – cho nhóm/cá nhân hoàn thành xuất sắc dự án chiến lược, phê duyệt bởi Ban GĐ. (2) Spot Bonus – thưởng nóng ngay lập tức, quản lý trung [Mức 1]/lần, giám đốc [Mức 2]/lần. (3) Innovation Bonus – cho sáng kiến được triển khai và đo lường giá trị thực tế."
+            },
+            {
+              "subsection_id": "PE-004-S02-06",
+              "title": "Tăng lương theo hiệu suất (Merit Increase)",
+              "content": "Tăng lương theo hiệu suất (Merit Increase) được thực hiện 1 lần/năm sau kỳ đánh giá cuối năm, dự kiến áp dụng từ tháng 1 hoặc tháng 2 năm sau.\n\nNguyên tắc tăng lương:\n- Chỉ áp dụng cho nhân viên chính thức, làm việc từ 6 tháng trở lên trong năm.\n- Mức tăng lương tùy thuộc vào: (a) xếp loại hiệu suất, (b) vị trí trong dải lương (compa-ratio), (c) ngân sách tăng lương của công ty.\n\nKhung tăng lương tham khảo theo xếp loại:\n- Bậc 5 – Xuất sắc: 10-15% lương cơ bản.\n- Bậc 4 – Tốt: 7-10%.\n- Bậc 3 – Đạt yêu cầu: 4-6%.\n- Bậc 2 – Cần cải thiện: 0-2% (hoặc không tăng).\n- Bậc 1 – Không đạt: 0% (không tăng lương).\n\nNhân viên vừa thăng chức: mức tăng được tính riêng dựa trên mức lương của vị trí mới, có thể vượt khung trên.\nQuy trình phê duyệt: Quản lý đề xuất → HRBP xem xét → C&B kiểm tra ngân sách → CHRO/CEO phê duyệt → thông báo cá nhân và cập nhật hợp đồng.",
+              "tags": [
+                "tăng lương",
+                "merit increase",
+                "salary review",
+                "compa-ratio",
+                "ngân sách lương"
+              ],
+              "chunk_text": "Tăng lương theo hiệu suất 1 lần/năm (áp dụng tháng 1-2 năm sau). Khung tăng: Xuất sắc 10-15%, Tốt 7-10%, Đạt 4-6%, Cần cải thiện 0-2%, Không đạt 0%. Phụ thuộc vào xếp loại + compa-ratio + ngân sách công ty. Phê duyệt: Quản lý → HRBP → C&B → CHRO/CEO."
+            },
+            {
+              "subsection_id": "PE-004-S02-07",
+              "title": "Chương trình phúc lợi linh hoạt (Flexible Benefits)",
+              "content": "Ngoài các khen thưởng trực tiếp, công ty triển khai chương trình phúc lợi linh hoạt để nhân viên tự lựa chọn theo nhu cầu cá nhân:\n\nMỗi nhân viên chính thức nhận một ngân sách phúc lợi linh hoạt hàng năm [Mức ngân sách theo cấp bậc]. Nhân viên có thể dùng ngân sách này cho:\n- Phúc lợi sức khỏe: nâng cấp gói bảo hiểm, đăng ký gym, spa, khám sức khỏe bổ sung.\n- Phúc lợi học tập: khóa học online, sách chuyên môn, hội thảo, chứng chỉ.\n- Phúc lợi gia đình: phụ cấp giữ trẻ, học phí con cái, chăm sóc người thân cao tuổi.\n- Phúc lợi tiện ích: phụ cấp internet tại nhà, thiết bị văn phòng tại nhà (cho WFH).\n- Phúc lợi du lịch: đóng góp vào quỹ du lịch cá nhân.\n\nQuy trình sử dụng: đăng ký trên cổng HR nội bộ, nộp hóa đơn chứng từ, C&B hoàn tiền trong 10 ngày làm việc.\nHạn sử dụng ngân sách: hết ngày 15/12 hàng năm, phần còn lại sẽ không được chuyển tiếp.",
+              "tags": [
+                "phúc lợi linh hoạt",
+                "flexible benefits",
+                "ngân sách phúc lợi",
+                "wellness",
+                "học tập",
+                "gia đình"
+              ],
+              "chunk_text": "Chương trình phúc lợi linh hoạt: mỗi nhân viên chính thức có ngân sách phúc lợi hàng năm dùng cho sức khỏe (gym, bảo hiểm nâng cấp), học tập (khóa học, chứng chỉ), gia đình (giữ trẻ, học phí con), tiện ích WFH, du lịch. Đăng ký trên HR portal, hoàn tiền trong 10 ngày. Hết hạn 15/12."
+            }
+          ]
+        },
+        {
+          "section_id": "PE-004-S03",
+          "title": "Thiết lập mục tiêu và OKR",
+          "subsections": [
+            {
+              "subsection_id": "PE-004-S03-01",
+              "title": "Phương pháp thiết lập mục tiêu OKR",
+              "content": "Công ty áp dụng phương pháp OKR (Objectives and Key Results) kết hợp với KPI truyền thống để quản lý mục tiêu:\n\nCấu trúc OKR:\n- Objective (O): Mục tiêu định tính, truyền cảm hứng, rõ ràng về hướng đi. Thường có 3-5 Objectives/người.\n- Key Results (KR): Kết quả đo lường được, xác nhận Objective đã đạt. Mỗi O có 2-4 KRs.\n- Initiatives: Các hành động cụ thể để đạt được KRs.\n\nNguyên tắc OKR:\n- Mục tiêu đặt ở mức 'stretch' – thách thức nhưng có thể đạt được (moonshot).\n- OKR cá nhân phải align với OKR phòng ban và OKR công ty.\n- OKR công khai trong phòng ban để tăng tính minh bạch và hỗ trợ lẫn nhau.\n- Đánh giá mức độ hoàn thành KR theo thang 0-1 (0.7 là mức tốt với mục tiêu thách thức).\n\nLịch OKR:\n- OKR năm: Đặt trong tháng 12, áp dụng từ tháng 1.\n- OKR quý: Review và điều chỉnh đầu mỗi quý.",
+              "tags": [
+                "OKR",
+                "mục tiêu",
+                "objectives",
+                "key results",
+                "alignment",
+                "stretch goal"
+              ],
+              "chunk_text": "OKR: Objectives (3-5/người, định tính truyền cảm hứng) + Key Results (2-4/O, đo lường được) + Initiatives. Mục tiêu stretch, align từ công ty → phòng ban → cá nhân. Đánh giá 0-1 (0.7 là tốt với mục tiêu thách thức). OKR năm đặt tháng 12, OKR quý review đầu quý."
+            },
+            {
+              "subsection_id": "PE-004-S03-02",
+              "title": "Hội thoại hiệu suất liên tục (Continuous Performance Conversations)",
+              "content": "Để tránh việc đánh giá hiệu suất chỉ là 'sự kiện năm một lần', công ty khuyến khích văn hóa hội thoại hiệu suất liên tục:\n\n1. Buổi 1-on-1 định kỳ:\n   - Tần suất: tối thiểu 2 tuần/lần giữa quản lý và từng nhân viên.\n   - Nội dung: tiến độ công việc, khó khăn, phát triển cá nhân, phản hồi hai chiều.\n   - Ghi chú được lưu vào hệ thống HRMS để theo dõi liên tục.\n\n2. Real-time Feedback:\n   - Nhân viên và quản lý có thể gửi feedback ngay sau sự kiện qua ứng dụng HRMS.\n   - Feedback có thể là: 'Tốt lắm' (positive), 'Cân nhắc' (constructive), hoặc 'Cảm ơn' (gratitude).\n\n3. Check-in mục tiêu hàng quý:\n   - Đầu mỗi quý: xem lại OKR, điều chỉnh nếu cần, xác nhận ưu tiên.\n   - Cuối mỗi quý: đánh giá nhanh mức độ hoàn thành OKR quý (không xếp loại chính thức).\n\n4. Development Conversation:\n   - Ít nhất 1 lần/6 tháng: thảo luận về nguyện vọng nghề nghiệp, kỹ năng cần phát triển, cơ hội trong công ty.",
+              "tags": [
+                "1-on-1",
+                "continuous feedback",
+                "real-time feedback",
+                "quarterly check-in",
+                "development conversation"
+              ],
+              "chunk_text": "Văn hóa hội thoại liên tục: (1) 1-on-1 định kỳ 2 tuần/lần – tiến độ, khó khăn, phản hồi 2 chiều, lưu HRMS. (2) Real-time Feedback qua app (positive/constructive/gratitude). (3) Check-in OKR đầu/cuối quý. (4) Development Conversation 6 tháng/lần về nguyện vọng nghề nghiệp."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
