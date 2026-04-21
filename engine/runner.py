@@ -298,6 +298,16 @@ class BenchmarkRunner:
 
             cost_tracker.judge = _extract_judge_token_usage(judge_result)
 
+            # Merge criteria scores từ judge vào ragas để có đủ 5 metrics
+            criteria = judge_result.get("criteria_scores", {})
+            ragas_scores.update({
+                "faithfulness": criteria.get("faithfulness", 0.0),
+                "relevancy":    criteria.get("relevancy",    0.0),
+                "accuracy":     criteria.get("accuracy",     0.0),
+                "tone":         criteria.get("tone",         0.0),
+                "safety":       criteria.get("safety",       0.0),
+            })
+
             # ── Assemble result ───────────────────────────────────────────────
             final_score = judge_result.get("final_score", 0)
             return {

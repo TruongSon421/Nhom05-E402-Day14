@@ -10,7 +10,12 @@ from agent.main_agent import MainAgent
 
 
 class ExpertEvaluator:
-    """Wrapper RetrievalEvaluator thật → interface evaluator.score() cho BenchmarkRunner."""
+    """Wrapper RetrievalEvaluator thật → interface evaluator.score() cho BenchmarkRunner.
+
+    Chỉ tính retrieval metrics (hit_rate, mrr).
+    5 criteria scores (accuracy, tone, safety, faithfulness, relevancy) được
+    lấy từ LLM-as-Judge trong runner.py (Step 3) để tránh gọi LLM 2 lần.
+    """
 
     def __init__(self):
         self._retrieval = RetrievalEvaluator()
@@ -25,8 +30,6 @@ class ExpertEvaluator:
         per = retrieval_result["per_case"][0] if retrieval_result["per_case"] else {}
 
         return {
-            "faithfulness": 1.0,   # placeholder — cần RAGAS nếu muốn đo thật
-            "relevancy":    1.0,   # placeholder
             "retrieval": {
                 "hit_rate": per.get("hit_rate") or 0.0,
                 "mrr":      per.get("mrr")      or 0.0,
