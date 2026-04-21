@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+pydantic
+pyjwt
+sqlalchemy
+pymysql
+passlib[bcrypt]
+python-dotenv
+redis
+psutil
+langgraph
+chromadb
+nemoguardrails
+langchain-openai
+langfuse>=2.0.0
