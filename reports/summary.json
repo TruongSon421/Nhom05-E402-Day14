@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "version": "Agent_V1_Base",
+    "total": 60,
+    "timestamp": "2026-04-21 17:38:00"
+  },
+  "metrics": {
+    "avg_score": 4.166666666666667,
+    "hit_rate": 0.7333333333333333,
+    "agreement_rate": 0.8333333333333334,
+    "cohen_kappa": 0.1386,
+    "cost": {
+      "total_cost_usd": 0.026511,
+      "cost_per_case_usd": 0.000442,
+      "breakdown": {
+        "gpt-4o-mini": {
+          "tokens": 45018,
+          "cost_usd": 0.018007
+        },
+        "gemini-2.5-flash": {
+          "tokens": 113388,
+          "cost_usd": 0.008504
+        }
+      }
+    }
+  }
+}
