@@ -1,6 +1,32 @@
+# --- Environment & Keys ---
 .env
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+python-venv/
+
+# --- Python ---
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+*.db
+*.log
+
+# --- IDEs & OS ---
+.vscode/
+.idea/
 .DS_Store
-reports/
+Thumbs.db
+
+# --- Lab Data & Reports (Per requirements) ---
 data/golden_set.jsonl
+reports/
+.ai-log/
