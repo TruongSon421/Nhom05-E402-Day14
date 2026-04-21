@@ -19,8 +19,8 @@ from app.config import settings
 
 # ── Đường dẫn — ưu tiên env var (set trong Docker), fallback local ─────────
 _THIS_FILE = Path(__file__).resolve()
-HR_DATASET_PATH    = Path(os.getenv("DATA_DIR", str(_THIS_FILE.parents[2] / "data"))) / "documents" / "hr_rag_dataset.json"
-CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(_THIS_FILE.parents[2] / ".chromadb"))
+HR_DATASET_PATH    = Path(os.getenv("DATA_DIR", str(_THIS_FILE.parents[3] / "data"))) / "documents" / "hr_rag_dataset.json"
+CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(_THIS_FILE.parents[3] / ".chromadb"))
 COLLECTION_NAME = "hr_chunks"   # phải trùng với retrieval_eval.py
 BATCH_SIZE      = 100
 

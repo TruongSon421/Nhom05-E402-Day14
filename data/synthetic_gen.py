@@ -139,6 +139,114 @@ def generate_from_chunk(chunk: Dict, case_type: str) -> Dict | None:
         return None
 
 
+def find_multi_hop_pairs(chunks: List[Dict], n: int = 7) -> List[tuple]:
+    """
+    Tìm các cặp chunk phù hợp để sinh câu hỏi multi-hop.
+    Ưu tiên: tag-based (cross-doc) → same-section → random cross-doc.
+    """
+    # Chiến lược 1: Tag-based cross-doc pairs (chất lượng cao nhất)
+    tag_pairs = []
+    for i, c1 in enumerate(chunks):
+        for c2 in chunks[i + 1:]:
+            shared = set(c1["tags"]) & set(c2["tags"])
+            if shared and c1["doc_id"] != c2["doc_id"]:
+                tag_pairs.append((c1, c2))
+    random.shuffle(tag_pairs)
+
+    if len(tag_pairs) >= n:
+        return tag_pairs[:n]
+
+    # Chiến lược 2: Same-section pairs (fallback)
+    by_section: Dict[str, List] = {}
+    for c in chunks:
+        by_section.setdefault(c["section_title"], []).append(c)
+
+    section_pairs = []
+    for group in by_section.values():
+        if len(group) >= 2:
+            # Lấy tối đa 3 cặp mỗi section để tránh trùng lặp
+            sample = random.sample(group, min(len(group), 4))
+            for i in range(len(sample) - 1):
+                section_pairs.append((sample[i], sample[i + 1]))
+    random.shuffle(section_pairs)
+
+    combined = tag_pairs + [p for p in section_pairs if p not in tag_pairs]
+
+    if len(combined) >= n:
+        return combined[:n]
+
+    # Chiến lược 3: Random cross-doc (last resort)
+    by_doc: Dict[str, List] = {}
+    for c in chunks:
+        by_doc.setdefault(c["doc_id"], []).append(c)
+    doc_ids = list(by_doc.keys())
+
+    needed = n - len(combined)
+    extra = []
+    attempts = 0
+    while len(extra) < needed and attempts < needed * 10:
+        attempts += 1
+        if len(doc_ids) < 2:
+            break
+        d1, d2 = random.sample(doc_ids, 2)
+        pair = (random.choice(by_doc[d1]), random.choice(by_doc[d2]))
+        if pair not in combined and pair not in extra:
+            extra.append(pair)
+    return combined + extra
+
+
+def generate_multi_hop(chunk1: Dict, chunk2: Dict) -> Dict | None:
+    """Sinh câu hỏi multi-hop yêu cầu kết hợp thông tin từ CẢ HAI chunk."""
+    prompt = (
+        "Bạn là chuyên gia tạo dữ liệu đánh giá AI.\n\n"
+        f"Đoạn văn 1 (ID: {chunk1['chunk_id']}):\n"
+        f"Tiêu đề: {chunk1['title']}\n"
+        f"Nội dung: {chunk1['content'][:600]}\n\n"
+        f"Đoạn văn 2 (ID: {chunk2['chunk_id']}):\n"
+        f"Tiêu đề: {chunk2['title']}\n"
+        f"Nội dung: {chunk2['content'][:600]}\n\n"
+        "Nhiệm vụ: Tạo 1 câu hỏi đòi hỏi kết hợp ĐỒNG THỜI thông tin từ CẢ HAI đoạn văn trên. "
+        "Yêu cầu:\n"
+        "  - Câu hỏi KHÔNG thể trả lời được nếu chỉ đọc 1 trong 2 đoạn.\n"
+        "  - Câu hỏi phải tự nhiên, giống câu nhân viên thực sự hỏi bộ phận HR.\n"
+        "  - expected_answer phải trích dẫn và kết hợp thông tin từ cả 2 nguồn.\n"
+        "  - reasoning giải thích tại sao cần cả 2 đoạn.\n\n"
+        "Trả về JSON (không markdown):\n"
+        '{"question":"...","expected_answer":"...","reasoning":"..."}'
+    )
+    try:
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=600,
+            response_format={"type": "json_object"},
+        )
+        r = json.loads(resp.choices[0].message.content)
+        shared_tags = list(set(chunk1["tags"]) & set(chunk2["tags"]))
+        return {
+            "question": r["question"],
+            "expected_answer": r["expected_answer"],
+            "context": (
+                f"[Chunk 1 - {chunk1['chunk_id']}] {chunk1['chunk_text'] or chunk1['content'][:300]}\n\n"
+                f"[Chunk 2 - {chunk2['chunk_id']}] {chunk2['chunk_text'] or chunk2['content'][:300]}"
+            ),
+            "ground_truth_ids": [chunk1["chunk_id"], chunk2["chunk_id"]],
+            "metadata": {
+                "difficulty": "hard",
+                "type": "multi_hop",
+                "topic": f"{chunk1['section_title']} × {chunk2['section_title']}",
+                "source_doc": f"{chunk1['doc_id']} + {chunk2['doc_id']}",
+                "chunk_title": f"{chunk1['title']} / {chunk2['title']}",
+                "tags": shared_tags or chunk1["tags"][:2] + chunk2["tags"][:2],
+                "hop_chunks": [chunk1["chunk_id"], chunk2["chunk_id"]],
+            },
+        }
+    except Exception as e:
+        print(f"  [WARN] Lỗi multi_hop ({chunk1['chunk_id']} + {chunk2['chunk_id']}): {e}")
+        return None
+
+
 def build_out_of_scope() -> List[Dict]:
     items = [
         ("Giá cổ phiếu của công ty hôm nay là bao nhiêu?",
@@ -164,45 +272,70 @@ def build_out_of_scope() -> List[Dict]:
 def main():
     chunks = load_chunks()
 
-    # Phân bổ 55 cases theo HARD_CASES_GUIDE.md:
-    # Nhóm 1 Adversarial Prompts: prompt_injection (8) + goal_hijacking (7)
-    # Nhóm 2 Edge Cases:          ambiguous (8) + conflicting (7)
-    # Nhóm 3 Multi-turn:          multi_hop (10)
-    # Nhóm 4 Baseline:            factual (15)
+    # Phân bổ cases theo HARD_CASES_GUIDE.md:
+    # Nhóm 1 Adversarial Prompts: prompt_injection (7) + goal_hijacking (7)
+    # Nhóm 2 Edge Cases:          ambiguous (7) + conflicting (7)
+    # Nhóm 3 Multi-turn:          multi_hop (10) — dùng 2 chunks thật
+    # Nhóm 4 Baseline:            factual (17)
     # Out-of-scope:               5 (hardcoded)
-    plan = [
-        ("factual",          20),
-        ("multi_hop",         7),
+    SINGLE_CHUNK_PLAN = [
+        ("factual",          17),
         ("prompt_injection",  7),
         ("goal_hijacking",    7),
         ("ambiguous",         7),
         ("conflicting",       7),
     ]
+    MULTI_HOP_COUNT = 10
 
+    # ── Bước 1: Sinh jobs cho single-chunk case types ─────────────────────
     jobs: List[tuple] = []
     used: set = set()
-    for case_type, count in plan:
+    for case_type, count in SINGLE_CHUNK_PLAN:
         available = [c for c in chunks if c["chunk_id"] not in used] or chunks
         selected = random.sample(available, min(count, len(available)))
         for chunk in selected:
             used.add(chunk["chunk_id"])
             jobs.append((chunk, case_type))
 
-    print(f"[INFO] Bắt đầu sinh {len(jobs)} test cases.")
+    # ── Bước 2: Tìm cặp chunk cho multi-hop ──────────────────────────────
+    multi_hop_pairs = find_multi_hop_pairs(chunks, n=MULTI_HOP_COUNT)
+    print(f"[INFO] Tìm được {len(multi_hop_pairs)} cặp chunk cho multi_hop")
+    for c1, c2 in multi_hop_pairs[:3]:  # preview 3 cặp đầu
+        shared = set(c1["tags"]) & set(c2["tags"])
+        print(f"   Cặp: {c1['chunk_id']} + {c2['chunk_id']} | tags chung: {shared or '-'}")
+
+    total_jobs = len(jobs) + len(multi_hop_pairs)
+    print(f"[INFO] Bắt đầu sinh {total_jobs} test cases ({len(jobs)} single + {len(multi_hop_pairs)} multi-hop).")
 
     cases: List[Dict] = []
+
+    # ── Bước 3: Song song hoá tất cả ─────────────────────────────────────
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        # Single-chunk futures
         future_map = {
             executor.submit(generate_from_chunk, chunk, ct): (chunk["chunk_id"], ct)
             for chunk, ct in jobs
         }
+        # Multi-hop futures (2 chunks)
+        mh_future_map = {
+            executor.submit(generate_multi_hop, c1, c2): (c1["chunk_id"], c2["chunk_id"])
+            for c1, c2 in multi_hop_pairs
+        }
+        all_futures = {**future_map, **mh_future_map}
+
         done = 0
-        for future in as_completed(future_map):
+        for future in as_completed(all_futures):
             done += 1
-            chunk_id, ct = future_map[future]
             result = future.result()
             status = "OK " if result else "ERR"
-            print(f"  [{done:2d}/{len(jobs)}] {status} {ct:12s} <- {chunk_id}")
+
+            if future in future_map:
+                chunk_id, ct = future_map[future]
+                print(f"  [{done:2d}/{total_jobs}] {status} {ct:15s} <- {chunk_id}")
+            else:
+                cid1, cid2 = mh_future_map[future]
+                print(f"  [{done:2d}/{total_jobs}] {status} {'multi_hop':15s} <- {cid1} + {cid2}")
+
             if result:
                 cases.append(result)
 
